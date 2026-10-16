@@ -3,7 +3,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, deleteUser }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, updateDoc, getDocs, collection, query, where, addDoc, deleteDoc, serverTimestamp }
+import { getFirestore, doc, setDoc, getDoc, updateDoc, getDocs, collection, query, where, addDoc, deleteDoc, serverTimestamp, runTransaction, Timestamp }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
@@ -56,7 +56,9 @@ function mapItem(d) {
   return { id: x.numId, _docId: d.id, title: x.title, desc: x.description, cat: x.category,
            price: x.pricingMode === "free" ? 0 : (x.pricingMode === "nego" ? null : x.price),
            cur: x.currency, artist: x.artist, img: x.previewData || x.previewUrl || null,
+           gallery: x.gallery || (x.previewData ? [x.previewData] : []),
            driveLink: x.driveLink || null,
+           auction: x.auction ? { ...x.auction, endsAt: x.auction.endsAt && x.auction.endsAt.toMillis ? x.auction.endsAt.toMillis() : 0 } : null,
            dur: x.duration || "", mine: x.artistId === window.ozean.user?.uid,
            draft: !x.isPublished };
 }
@@ -95,17 +97,22 @@ window.publishItem = async (item) => {
   if (item.driveLink && !/^https:\/\/(drive|docs)\.google\.com\//.test(item.driveLink)) {
     throw new Error("رابط Google Drive غير صالح، يجب أن يبدأ بـ https://drive.google.com/");
   }
-  const previewData = item.img ? await compressImage(item.img) : null;
+  const galleryData = item.gallery && item.gallery.length
+    ? await Promise.all(item.gallery.map(g => compressImage(g, 700, 150 * 1024)))
+    : (item.img ? [await compressImage(item.img, 700, 150 * 1024)] : []);
+  const previewData = galleryData[0] || null;
   const docRef = await addDoc(collection(db, "items"), {
     numId: item.id, title: item.title, description: item.desc || "",
     category: item.cat,
-    pricingMode: item.price === 0 ? "free" : (item.price == null ? "nego" : "fixed"),
-    price: item.price ?? null, currency: item.cur || "LYD",
+    pricingMode: item.auction ? "auction" : (item.price === 0 ? "free" : (item.price == null ? "nego" : "fixed")),
+    price: item.auction ? Number(item.auction.startPrice) : (item.price ?? null), currency: item.cur || "LYD",
     artist: user.displayName || "فنان", artistId: uid,
     isPublished: !item.draft, createdAt: serverTimestamp(),
     commissionPercent: item.commissionPercent ?? 10, minFeeUsd: item.minFeeUsd ?? 0.5,
     previewData,
-    driveLink: item.driveLink || null
+    gallery: galleryData,
+    driveLink: item.driveLink || null,
+    auction: item.auction ? { ...item.auction, startPrice: Number(item.auction.startPrice), minStep: Number(item.auction.minStep), endsAt: Timestamp.fromDate(new Date(item.auction.endsAt)) } : null
   });
   const warnings = [];
   // الملف الأصلي: إن وُضع رابط Drive فلا يُرفع شيء، وإلا يُحفظ في Storage إن كان مفعّلاً
@@ -128,6 +135,33 @@ window.loadProfile = async () => {
 window.saveProfile = async (data) => {
   const u = window.ozean.user; if (!u) throw new Error("سجّل الدخول أولاً");
   await updateDoc(doc(db, "users", u.uid), data);
+};
+
+window.placeBid = async (docId, amount) => {
+  const u = window.ozean.user;
+  if (!u) throw new Error("سجّل الدخول أولاً");
+  const ref = doc(db, "items", docId);
+  await runTransaction(db, async (tx) => {
+    const snap = await tx.get(ref);
+    if (!snap.exists()) throw new Error("العمل غير موجود");
+    const a = snap.data().auction;
+    if (!a) throw new Error("هذا العمل ليس مزاداً");
+    const ends = a.endsAt && a.endsAt.toMillis ? a.endsAt.toMillis() : 0;
+    if (a.closed || Date.now() >= ends) throw new Error("انتهى المزاد");
+    const min = a.highBid != null ? a.highBid + a.minStep : a.startPrice;
+    if (!(Number(amount) >= min)) throw new Error("أقل مزايدة مسموحة: " + min);
+    tx.update(ref, {
+      "auction.highBid": Number(amount),
+      "auction.highBidder": u.uid,
+      "auction.highBidderName": u.displayName || "",
+      "auction.bids": (a.bids || 0) + 1
+    });
+  });
+};
+
+window.closeAuction = async (docId) => {
+  if (!window.ozean.user) throw new Error("سجّل الدخول أولاً");
+  await updateDoc(doc(db, "items", docId), { "auction.closed": true });
 };
 
 window.deleteItem = async (docId) => {

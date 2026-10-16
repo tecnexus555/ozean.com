@@ -40,6 +40,13 @@
 .cta-band{margin-top:26px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;background:linear-gradient(135deg,rgba(34,211,238,.14),rgba(37,99,235,.18));border:1px solid var(--line);border-radius:20px;padding:20px}
 .cta-band b{display:block;font-size:17px;margin-bottom:4px}
 .cta-band small{color:var(--mute)}
+.catnav{display:flex;gap:18px;overflow-x:auto;padding:12px 16px;border-bottom:1px solid var(--line);font-size:14px}
+.catnav button{background:none;border:0;color:var(--txt);white-space:nowrap;cursor:pointer;padding:4px 0}
+.catnav button:hover{color:var(--cyan)}
+.feat div{background:none;border:0;box-shadow:none}
+.feat span{width:68px;height:68px;border-radius:50%;border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-size:26px;background:transparent}
+.bigcta{text-align:center;margin:26px 0}
+.btn.big{padding:16px 46px;font-size:18px;border-radius:999px;box-shadow:0 10px 30px rgba(34,211,238,.35)}
 @media(max-width:760px){.hero2{grid-template-columns:1fr}.hero2 h1{font-size:26px}.hero2-art{min-height:260px}.float{max-width:160px;font-size:11px}}
 
 *{box-sizing:border-box;margin:0;padding:0}
@@ -179,6 +186,18 @@ footer a{color:var(--cyan)}
   <button data-t="upload" onclick="go('upload')">رفع عمل</button>
   <button data-t="profile" onclick="go('profile')">حسابي</button>
 </nav>
+<div class="catnav">
+  <button onclick="setCat('all',true)">الكل</button>
+  <button onclick="setCat('paint',true)">لوحات</button>
+  <button onclick="setCat('photo',true)">صور</button>
+  <button onclick="setCat('music',true)">موسيقى</button>
+  <button onclick="setCat('video',true)">فيديو</button>
+  <button onclick="setCat('fashion',true)">أزياء</button>
+  <button onclick="setCat('footwear',true)">أحذية</button>
+  <button onclick="setCat('accessories',true)">إكسسوارات</button>
+  <button onclick="setCat('jewelry',true)">مجوهرات</button>
+  <button onclick="setCat('graphic',true)">تصاميم</button>
+</div>
 
 <main>
 
@@ -206,10 +225,10 @@ footer a{color:var(--cyan)}
         <rect x="120" y="90" width="220" height="170" rx="8" fill="#0b1d3a" stroke="#67e8f9" stroke-width="6"/>
         <rect x="134" y="104" width="192" height="142" fill="url(#hsun)" opacity=".55"/>
       </svg>
-      <div class="float f-auction">
+      <div class="float f-auction" style="cursor:pointer" onclick="setCat('auction',true)">
         <b>مزادات حية</b>
         <small>فرصتك لامتلاك أعمال فنية مميزة</small>
-        <span class="soon">قريباً</span>
+        
       </div>
       <div class="float f-cert">
         <b>شهادة إثبات الملكية</b>
@@ -231,6 +250,7 @@ footer a{color:var(--cyan)}
 
   <div class="feat"><div><span>🎨</span>أعمال أصلية</div><div><span>🤝</span>دعم الفنانين</div><div><span>🔨</span>مزادات مميزة</div><div><span>📜</span>شهادة ملكية</div><div><span>🔒</span>تجربة آمنة</div></div>
 
+  <div class="bigcta"><button class="btn big" onclick="go('store')">تصفّح المتجر</button></div>
   <h2>الأقسام</h2>
   <div class="strip" id="cats"></div>
 
@@ -321,8 +341,8 @@ footer a{color:var(--cyan)}
         <option value="graphic">تصميم رقمي</option>
       </select>
     </div>
-    <div class="fld"><label>الملف</label>
-      <input type="file" id="f_file" accept="image/*" onchange="onFile(event)">
+    <div class="fld"><label>الملف (يمكن اختيار حتى 4 صور للعمل الواحد)</label>
+      <input type="file" id="f_file" multiple accept="image/*" onchange="onFile(event)">
       <img id="f_img" class="prev" alt="">
       <video id="f_vid" class="prev" controls muted playsinline></video>
       <audio id="f_aud" class="prev" controls></audio>
@@ -332,6 +352,10 @@ footer a{color:var(--cyan)}
     <div class="fld"><label>طريقة التسعير</label><select id="f_mode" onchange="onMode()"><option value="fixed">سعر ثابت</option><option value="free">مجاني</option><option value="nego">بالتفاوض / عند الطلب</option></select></div>
     <div class="fld"><label>العملة والسعر</label><div style="display:flex;gap:8px"><select id="f_cur" style="flex:0 0 170px"><option value="LYD">دينار ليبي (د.ل)</option><option value="USD">دولار ($)</option><option value="EUR">يورو (€)</option><option value="SAR">ريال سعودي (ر.س)</option><option value="USDT">USDT (عملة مستقرة)</option><option value="ETH">إيثيريوم (ETH)</option><option value="BTC">بيتكوين (BTC)</option></select><input id="f_price" type="number" min="0" step="any" placeholder="مثال: 800" style="flex:1;min-width:0"></div></div>
     <div class="fld"><label>الوصف</label><textarea id="f_desc" rows="3" placeholder="وصف مختصر للعمل"></textarea></div>
+    <label class='switch'><span>عرض كمزاد</span><input type='checkbox' id='f_auc'></label>
+    <div class='fld'><label>سعر بداية المزاد (بعملة العمل)</label><input id='f_aucStart' type='number' min='1' step='any'></div>
+    <div class='fld'><label>أقل زيادة في المزايدة</label><input id='f_aucStep' type='number' min='1' step='any' value='10'></div>
+    <div class='fld'><label>ينتهي في</label><input id='f_aucEnd' type='datetime-local'></div>
     <div class='fld'><label>نسبة المنصة من هذا العمل (من 5% إلى 30%)</label><input id='f_pct' type='number' min='5' max='30' step='0.5' value='10'></div>
     <div class='fld'><label>أقل عمولة بالدولار لكل عملية بيع</label><input id='f_minfee' type='number' min='0.5' step='0.1' value='0.5'></div>
     <div class='fld'><label>رابط الملف الأصلي في Google Drive (اختياري)</label><input id='f_drive' type='url' placeholder='https://drive.google.com/...'></div>
@@ -431,12 +455,13 @@ let items=[
 const state={owned:[3,9],shares:0,links:{},svc:{mypay:false,visa:false,paypal:false,crypto:false},profile:{avatar:''},pub:true,share:true};
 let cat='all', q='', curId=null, wallet=false;
 let up={img:'',vid:'',aud:'',file:null};
+let gallery=[];
 let stageFiles=[];
 
 const CURS={LYD:'د.ل',USD:'$',EUR:'€',SAR:'ر.س',USDT:'USDT',ETH:'ETH',BTC:'BTC'};
 const CUR_DEC={USDT:2,ETH:4,BTC:6};
 const money=(n,cur='LYD')=>{const d=CUR_DEC[cur]||0;const v=Number(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});const s=CURS[cur]||cur;return (cur==='USD'||cur==='EUR')?s+v:v+' '+s;};
-const priceTxt=it=>it.price===0?'مجاني':(it.price==null?'بالتفاوض':money(it.price,it.cur||'LYD'));
+const priceTxt=it=>it.auction?auctionTxt(it):it.price===0?'مجاني':(it.price==null?'بالتفاوض':money(it.price,it.cur||'LYD'));
 function onMode(){const m=$('f_mode').value;$('f_price').disabled=m!=='fixed';if(m!=='fixed')$('f_price').value='';}
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const find=id=>items.find(x=>x.id===id);
@@ -457,7 +482,7 @@ function thumb(it){
 function card(it){
   return `<div class="card" onclick="openItem(${it.id})"><div class="art">${thumb(it)}<span class="wm">OZEAN</span><span class="badge">${CAT[it.cat]}</span></div>
   <div class="meta"><b>${esc(it.title)}</b><small>${esc(it.artist)} <span class="verified">✔</span></small>
-  <div class="row2"><span class="price">${priceTxt(it)}</span>${it.dur?`<span class="timer">${it.dur}</span>`:''}</div></div></div>`;
+  <div class="row2"><span class="price">${priceTxt(it)}</span>${it.auction?`<span class="timer">${timeLeft(it.auction)}</span>`:(it.dur?`<span class="timer">${it.dur}</span>`:'')}</div></div></div>`;
 }
 
 // ===== الصفحات =====
@@ -476,8 +501,8 @@ function renderHome(){
 }
 function setCat(c,goTo){ cat=c; if(goTo) go('store'); else renderStore(); }
 function renderStore(){
-  $('chips').innerHTML=[['all','الكل'],...Object.entries(CAT)].map(([k,v])=>`<button class="chip ${cat===k?'on':''}" onclick="setCat('${k}')">${v}</button>`).join('');
-  const list=items.filter(x=>!x.draft && (!x.mine||state.pub) && (cat==='all'||x.cat===cat) && (!q||(x.title+' '+x.artist+' '+(x.desc||'')+' '+(CAT[x.cat]||'')).toLowerCase().includes(q.toLowerCase())));
+  $('chips').innerHTML=[['all','الكل'],['auction','مزادات'],...Object.entries(CAT)].map(([k,v])=>`<button class="chip ${cat===k?'on':''}" onclick="setCat('${k}')">${v}</button>`).join('');
+  const list=items.filter(x=>!x.draft && (!x.mine||state.pub) && (cat==='all'||(cat==='auction'?!!x.auction:x.cat===cat)) && (!q||(x.title+' '+x.artist+' '+(x.desc||'')+' '+(CAT[x.cat]||'')).toLowerCase().includes(q.toLowerCase())));
   renderGrid(list);
   $('empty').style.display=list.length?'none':'block';
 }
@@ -498,11 +523,13 @@ function openItem(id){
       <p class="desc">${esc(it.desc||'')}</p>
       <div class="notice">${media?`معاينة مجانية ${it.cat==='video'?'10 ثوانٍ':'15 ثانية'} قبل الشراء، والملف الكامل يُسلَّم بعد الدفع.`:'العمل يُعرض بعلامة مائية، والنسخة الأصلية تُسلَّم بعد الشراء.'}</div>
       <div class="row2" style="border:0;margin:6px 0 16px"><span class="price" style="font-size:22px">${priceTxt(it)}</span>${it.dur?`<span class="timer">${it.dur}</span>`:''}</div>
-      <div class="cta">${owned?'<button class="btn ghost" disabled>تمت الملكية ✔</button>':`<button class="btn" onclick="openCheckout(${id})">شراء الآن</button>`}<button class="btn ghost" onclick="go('store')">رجوع</button></div>
+      <div class="cta">${owned?'<button class="btn ghost" disabled>تمت الملكية ✔</button>':(it.auction?'':`<button class="btn" onclick="openCheckout(${id})">شراء الآن</button>`)}<button class="btn ghost" onclick="go('store')">رجوع</button></div>
       <h2 style="margin-top:22px">مشاركة العمل</h2>
       <div class="sbtns">${shareBtns(id)}</div>
     </div>`;
   addOwnerTools(it);
+  addAuctionTools(it);
+  addGallery(it);
   go('detail');
 }
 
@@ -610,6 +637,7 @@ function watermark(src,cb){
 }
 function resetPrev(){
   up={img:'',vid:'',aud:'',file:null};
+  gallery=[];
   ['f_img','f_vid','f_aud'].forEach(id=>{const el=$(id);el.style.display='none';el.removeAttribute('src');});
 }
 function onType(){
@@ -618,7 +646,24 @@ function onType(){
   $('f_file').value='';
   resetPrev();
 }
+async function processGallery(files){
+  const max=4;
+  const list=files.slice(0,max);
+  if(files.length>max) toast('أول '+max+' صور فقط');
+  resetPrev();
+  up.file=list[0];
+  gallery=[];
+  for(const f of list){
+    const src=await new Promise(res=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.readAsDataURL(f); });
+    gallery.push(await new Promise(res=>watermark(src,res)));
+  }
+  up.img=gallery[0];
+  const i=$('f_img'); i.src=up.img; i.style.display='block';
+  toast('تمت إضافة '+gallery.length+' صور للعمل');
+}
 function onFile(e){
+  const tp=$('f_type').value;
+  if(tp!=='music' && tp!=='video' && e.target.files.length>1){ return processGallery(Array.from(e.target.files)); }
   const f=e.target.files[0]; if(!f) return;
   resetPrev();
   const t=$('f_type').value;
@@ -638,6 +683,14 @@ async function submitWork(){
   const pub=$('f_pub').checked;
   if(!title){ toast('أدخل اسم العمل'); return; }
   if(mode==='fixed' && !(price>0)){ toast('أدخل سعراً صحيحاً'); return; }
+  let aucObj=null;
+  if($('f_auc').checked){
+    const sp=Number($('f_aucStart').value), st=Number($('f_aucStep').value), en=$('f_aucEnd').value;
+    if(!(sp>0)){ toast('أدخل سعر بداية المزاد'); return; }
+    if(!(st>0)){ toast('أدخل أقل زيادة للمزايدة'); return; }
+    if(!en || new Date(en).getTime() <= Date.now()){ toast('حدد وقت انتهاء في المستقبل'); return; }
+    aucObj={startPrice:sp, minStep:st, endsAt:new Date(en).toISOString(), highBid:null, highBidder:null, highBidderName:null, bids:0, closed:false};
+  }
   const file = type==='music'?up.aud : type==='video'?up.vid : up.img;
   if(!file){ toast('ارفع الملف أولاً'); return; }
   if(window.publishItem && !(window.ozean && window.ozean.user)){ toast('سجّل الدخول بحساب Google لنشر العمل'); return; }
@@ -652,7 +705,7 @@ async function submitWork(){
   if(window.publishItem){
     const it=items[items.length-1];
     items=items.filter(x=>x!==it);
-    window.publishItem({...it, masterFile: up.file, commissionPercent: Number($('f_pct').value)||10, minFeeUsd: Number($('f_minfee').value)||0.5, driveLink: $('f_drive').value.trim()||null})
+    window.publishItem({...it, masterFile: up.file, commissionPercent: Number($('f_pct').value)||10, minFeeUsd: Number($('f_minfee').value)||0.5, driveLink: $('f_drive').value.trim()||null, auction: aucObj, gallery: (gallery.length?gallery:(it.img?[it.img]:[]))})
       .then(res=>{ if(res&&res.warnings&&res.warnings.length) toast(res.warnings.join(' · ')); return window.loadItems ? window.loadItems() : []; })
       .then(r=>{ items=items.filter(x=>!x._remote).concat(r.map(x=>({...x,_remote:true}))); window.ozeanSynced=true; updateNet(); go('store'); })
       .catch(err=>{ items.push(it); toast('تعذّر الحفظ: '+err.message); });
@@ -890,6 +943,80 @@ function addOwnerTools(it){
   const del=document.createElement('button'); del.className='btn ghost'; del.style.color='#dc2626'; del.textContent='حذف العمل';
   del.onclick=()=>deleteWork(it.id); bar.appendChild(del);
   box.appendChild(bar);
+}
+function auctionTxt(it){
+  const a=it.auction, cur=it.cur||'LYD';
+  const v=a.highBid!=null?a.highBid:a.startPrice;
+  return (a.closed?'مغلق · ':'مزاد · ')+money(v,cur);
+}
+function timeLeft(a){
+  const ms=(a.endsAt||0)-Date.now();
+  if(a.closed||ms<=0) return 'انتهى';
+  const h=Math.floor(ms/3600000), d=Math.floor(h/24);
+  return d>0 ? 'ينتهي بعد '+d+' يوم' : 'ينتهي بعد '+h+' ساعة';
+}
+function addAuctionTools(it){
+  if(!it.auction || !it._docId) return;
+  const box=$('detailBox'); if(!box) return;
+  const a=it.auction, cur=it.cur||'LYD';
+  const isOwner=!!it.mine;
+  const isAdmin=!!(window.ozean&&window.ozean.user&&window.ozean.user.email==='tecnexus555@gmail.com');
+  const top=a.highBid!=null?a.highBid:a.startPrice;
+  const min=a.highBid!=null?a.highBid+a.minStep:a.startPrice;
+  const info=document.createElement('div'); info.className='notice'; info.style.marginTop='14px';
+  info.innerHTML=`<b style='color:var(--txt)'>المزاد</b><br>أعلى مزايدة: ${money(top,cur)} · أقل مزايدة: ${money(min,cur)}<br>عدد المزايدات: ${a.bids||0} · ${timeLeft(a)}${a.highBidderName?'<br>صاحب أعلى مزايدة: '+esc(a.highBidderName):''}`;
+  box.appendChild(info);
+  const ended=a.closed||(a.endsAt||0)<=Date.now();
+  if(!ended && !isOwner){
+    const row=document.createElement('div'); row.className='cta';
+    const inp=document.createElement('input'); inp.type='number'; inp.min=min; inp.step='any'; inp.placeholder=String(min);
+    inp.style.cssText='background:var(--bg2);border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:10px;width:160px';
+    const btn=document.createElement('button'); btn.className='btn'; btn.textContent='زايد';
+    btn.onclick=()=>placeBidUI(it.id, Number(inp.value));
+    row.appendChild(inp); row.appendChild(btn); box.appendChild(row);
+  }
+  if(!a.closed && (isOwner||isAdmin)){
+    const row=document.createElement('div'); row.className='cta';
+    const c=document.createElement('button'); c.className='btn ghost'; c.textContent='إغلاق المزاد وتحديد الفائز';
+    c.onclick=()=>closeAuctionUI(it.id); row.appendChild(c); box.appendChild(row);
+  }
+}
+async function reloadRemote(){
+  if(!window.loadItems) return;
+  const r=await window.loadItems();
+  items=items.filter(x=>!x._remote).concat(r.map(x=>({...x,_remote:true})));
+}
+async function placeBidUI(id, amount){
+  const it=find(id); if(!it) return;
+  if(!(window.ozean&&window.ozean.user)){ toast('سجّل الدخول للمزايدة'); return; }
+  if(it.mine){ toast('لا يمكنك المزايدة على عملك'); return; }
+  try{
+    await window.placeBid(it._docId, amount);
+    toast('تمت المزايدة');
+    await reloadRemote(); openItem(id);
+  }catch(e){ toast(e.message||'تعذّرت المزايدة'); }
+}
+async function closeAuctionUI(id){
+  const it=find(id); if(!it) return;
+  if(!confirm('إغلاق المزاد الآن؟ سيُعتمد أعلى مزايد فائزاً.')) return;
+  try{
+    await window.closeAuction(it._docId);
+    toast('تم إغلاق المزاد');
+    await reloadRemote(); openItem(id);
+  }catch(e){ toast('تعذّر الإغلاق: '+e.message); }
+}
+function addGallery(it){
+  const g=it.gallery||[]; if(g.length<2) return;
+  const box=$('detailBox'); if(!box||!box.firstElementChild) return;
+  const strip=document.createElement('div');
+  strip.style.cssText='display:flex;gap:8px;margin-top:10px;overflow-x:auto';
+  g.forEach(src=>{
+    const im=document.createElement('img'); im.src=src; im.alt='';
+    im.style.cssText='width:64px;height:64px;object-fit:cover;border-radius:10px;cursor:pointer;border:1px solid var(--line);flex:0 0 auto';
+    im.onclick=()=>{ const main=box.querySelector('.art img'); if(main) main.src=src; };
+    strip.appendChild(im);
+  });
+  box.firstElementChild.appendChild(strip);
 }
 function currentSection(){ const s=document.querySelector('main section.on'); return s?s.id:'home'; }
 window.addEventListener('ozean-auth', async (e)=>{
