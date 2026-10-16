@@ -189,6 +189,14 @@ footer a{color:var(--cyan)}
 .box2 b{display:block;margin-bottom:8px;color:var(--txt);font-size:14px}
 .row3{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:10px;background:var(--bg2);margin-bottom:6px;cursor:pointer;color:var(--txt)}
 .row3:hover{color:var(--cyan)}
+
+@media(max-width:760px){#cats{display:grid;grid-template-columns:repeat(3,1fr);overflow:visible}#cats .catc{min-width:0;padding:10px 4px}#cats .catc span{width:44px;height:44px;font-size:18px}.catnav{gap:14px;font-size:13px}}
+@media(min-width:761px) and (max-width:1000px){.r-wrap{grid-template-columns:1fr}.r-side{flex-direction:row;flex-wrap:wrap}.r-side .box2{flex:1 1 220px}}
+
+@media(max-width:760px){.r-wrap{display:flex;flex-direction:column}.r-hero{order:1}.r-side{order:2;display:grid;grid-template-columns:1fr 1fr;gap:10px}.r-side .box2{padding:10px;font-size:12px}.r-side .box2 b{font-size:13px;margin-bottom:6px}.r-side .row3{padding:6px 8px;font-size:12px}}
+
+.bnav{display:none}
+@media(max-width:760px){.tabs{display:none}.bnav{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:30;background:var(--hdr);backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:8px 6px calc(8px + env(safe-area-inset-bottom,0px));justify-content:space-around}.bnav button{background:none;border:0;color:var(--mute);font-size:12px;cursor:pointer;padding:4px 6px}.bnav button:hover{color:var(--cyan)}body{padding-bottom:72px}}
 </style>
 </head>
 <body>
@@ -458,6 +466,13 @@ footer a{color:var(--cyan)}
 
 <div class='modal' id='certModal' onclick='if(event.target===this)closeCert()'><div class='sheet' style='max-width:640px;max-height:90vh;overflow:auto'><button class='x' onclick='closeCert()'>×</button><div id='certBox'></div><div class='cta' style='margin-top:14px'><button class='btn' onclick='printCert()'>طباعة / حفظ PDF</button><button class='btn ghost' onclick='downloadCert()'>تنزيل HTML</button><button class='btn ghost' onclick='closeCert()'>إغلاق</button></div></div></div>
 <div class='modal' id='statusModal' onclick='if(event.target===this)closeStatus()'><div class='sheet' style='max-width:460px'><button class='x' onclick='closeStatus()'>×</button><h3 style='margin-bottom:10px'>حالة الاتصال والمزامنة</h3><div id='stBox'></div><div class='cta' style='margin-top:12px'><button class='btn' onclick='openStatus()'>إعادة الفحص</button></div></div></div>
+<nav class="bnav" aria-label="تنقل سفلي">
+  <button onclick="go('home')">الرئيسية</button>
+  <button onclick="go('store')">المتجر</button>
+  <button onclick="go('artist')">لوحة الفنان</button>
+  <button onclick="go('upload')">رفع عمل</button>
+  <button onclick="go('profile')">حسابي</button>
+</nav>
 <div class="toast" id="toast"></div>
 
 <script>
