@@ -25,8 +25,6 @@ const storage = getStorage(app);
 const provider = new GoogleAuthProvider();
 
 window.ozean = { user: null };
-// البريد الوحيد المسموح له بالدخول حالياً
-const ALLOWED_EMAILS = ["tecnexus555@gmail.com"];
 
 window.signIn = async () => {
   try { await signInWithPopup(auth, provider); }
@@ -35,18 +33,20 @@ window.signIn = async () => {
 window.signOutUser = () => signOut(auth);
 
 onAuthStateChanged(auth, async (user) => {
-  if (user && !ALLOWED_EMAILS.includes(user.email)) {
-    alert("هذا الحساب غير مصرّح له بالدخول إلى Ozean");
-    await signOut(auth);
-    return;
-  }
   window.ozean.user = user;
   window.dispatchEvent(new CustomEvent("ozean-auth", { detail: user }));
   if (user) {
     const r = doc(db, "users", user.uid);
-    if (!(await getDoc(r)).exists()) {
+    const snap = await getDoc(r);
+    if (!snap.exists()) {
+      const ok = confirm("بالمتابعة توافق على حفظ بياناتك (الاسم والبريد والصورة) لإدارة حسابك في Ozean. هل توافق؟");
+      if (!ok) { await signOut(auth); return; }
       await setDoc(r, { displayName: user.displayName || "", email: user.email || "",
-                        photoURL: user.photoURL || "", createdAt: serverTimestamp() });
+        photoURL: user.photoURL || "", phone: "", createdAt: serverTimestamp(),
+        consentAt: serverTimestamp(), lastLoginAt: serverTimestamp() });
+    } else {
+      await updateDoc(r, { lastLoginAt: serverTimestamp(), displayName: user.displayName || "",
+        photoURL: user.photoURL || "" });
     }
   }
 });
@@ -117,6 +117,16 @@ window.publishItem = async (item) => {
     }
   }
   return { id: docRef.id, warnings };
+};
+
+window.loadProfile = async () => {
+  const u = window.ozean.user; if (!u) return null;
+  const s = await getDoc(doc(db, "users", u.uid));
+  return s.exists() ? s.data() : null;
+};
+window.saveProfile = async (data) => {
+  const u = window.ozean.user; if (!u) throw new Error("سجّل الدخول أولاً");
+  await updateDoc(doc(db, "users", u.uid), data);
 };
 
 window.deleteItem = async (docId) => {

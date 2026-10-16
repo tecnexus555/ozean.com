@@ -286,7 +286,8 @@ footer a{color:var(--cyan)}
     <div class="box">
       <h2 style="margin-top:0">بياناتي</h2>
       <div class="kv"><span>البريد الإلكتروني</span><span id="pEmail">—</span></div>
-      <div class="kv"><span>الجوال</span><span>غير مضاف</span></div>
+      <div class="kv"><span>الجوال</span><span><input id='pPhone' type='tel' placeholder='+218...' onchange='savePhone(this.value)' style='background:transparent;border:0;color:inherit;text-align:left;width:160px'></span></div>
+      <div class="kv"><span>من يرى رقمي</span><span><select id='pPrivacy' onchange='savePhone(document.getElementById("pPhone").value)' style='background:var(--bg2);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:4px'><option value='private'>خاص، لا يظهر لأحد</option><option value='buyers'>للمشترين بعد الشراء فقط</option><option value='public'>للجميع</option></select></span></div>
       <div class="kv"><span>وسيلة الدفع المحفوظة</span><span>لا توجد</span></div>
       <div class="kv"><span>عدد الممتلكات الرقمية</span><span id="statO">0</span></div>
       <div class='cta' style='margin:12px 0'><button class='btn ghost' onclick='logoutUI()'>تسجيل الخروج</button><button class='btn ghost' onclick='deleteAccountUI()' style='color:#dc2626'>حذف الحساب</button></div>
@@ -766,6 +767,14 @@ async function deleteWork(id){
     renderArtist(); renderStore();
   }catch(e){ toast('تعذّر الحذف: '+e.message); }
 }
+function savePhone(v){
+  if(!window.saveProfile) return;
+  const phone=(v||'').trim();
+  if(phone && !/^\+?[0-9\s-]{7,20}$/.test(phone)){ toast('صيغة الرقم غير صحيحة، استخدم مفتاح الدولة مثل +218'); return; }
+  window.saveProfile({phone:phone||null, phonePrivacy:$('pPrivacy').value})
+    .then(()=>toast('تم حفظ إعدادات الهاتف'))
+    .catch(e=>toast('تعذّر الحفظ: '+e.message));
+}
 function logoutUI(){
   if(window.signOutUser) window.signOutUser();
   toast('تم تسجيل الخروج');
@@ -785,8 +794,10 @@ async function deleteAccountUI(){
 function currentSection(){ const s=document.querySelector('main section.on'); return s?s.id:'home'; }
 window.addEventListener('ozean-auth', async (e)=>{
   const u=e.detail;
+  if(!u) window.ozeanSynced=false;
   if(u){
     state.owned=[];
+    if(window.loadProfile) window.loadProfile().then(p=>{ if(p&&p.phone) $('pPhone').value=p.phone; if(p&&p.phonePrivacy) $('pPrivacy').value=p.phonePrivacy; }).catch(()=>{});
     $('pEmail').textContent=u.email||'—';
     $('pName').textContent=u.displayName||'حسابي';
     if(u.photoURL && !state.profile.avatar){
@@ -804,7 +815,7 @@ window.addEventListener('ozean-auth', async (e)=>{
       const remote=await window.loadItems();
       items=items.filter(x=>!x._remote).concat(remote.map(r=>({...r,_remote:true})));
       window.ozeanSynced=true; updateNet();
-    }catch(err){ console.error(err); toast('تعذّر تحميل الأعمال من الخادم'); }
+    }catch(err){ console.error(err); toast('تعذّر تحميل الأعمال من الخادم'); window.ozeanSynced=false; updateNet(); }
   }
   go(currentSection());
 });
