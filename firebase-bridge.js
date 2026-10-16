@@ -1,7 +1,7 @@
 // جسر Firebase: تسجيل الدخول بحساب Google والقراءة والنشر والحفظ
 // ملاحظة: الصفحة لا تحمّل هذا الملف بعد. يُضاف عبر: <script type="module" src="firebase-bridge.js"></script>
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, deleteUser }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, updateDoc, getDocs, collection, query, where, addDoc, deleteDoc, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -122,6 +122,15 @@ window.publishItem = async (item) => {
 window.deleteItem = async (docId) => {
   if (!window.ozean.user) throw new Error("سجّل الدخول أولاً");
   await deleteDoc(doc(db, "items", docId));
+};
+
+window.deleteAccount = async () => {
+  const user = auth.currentUser;
+  if (!user) throw new Error("سجّل الدخول أولاً");
+  const mine = await getDocs(query(collection(db, "items"), where("artistId", "==", user.uid)));
+  for (const d of mine.docs) await deleteDoc(d.ref);
+  await deleteDoc(doc(db, "users", user.uid)).catch(() => {});
+  await deleteUser(user);
 };
 
 window.saveAvatar = async (dataUrl) => {

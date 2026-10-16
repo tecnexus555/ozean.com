@@ -289,6 +289,7 @@ footer a{color:var(--cyan)}
       <div class="kv"><span>الجوال</span><span>غير مضاف</span></div>
       <div class="kv"><span>وسيلة الدفع المحفوظة</span><span>لا توجد</span></div>
       <div class="kv"><span>عدد الممتلكات الرقمية</span><span id="statO">0</span></div>
+      <div class='cta' style='margin:12px 0'><button class='btn ghost' onclick='logoutUI()'>تسجيل الخروج</button><button class='btn ghost' onclick='deleteAccountUI()' style='color:#dc2626'>حذف الحساب</button></div>
       <h2>ممتلكاتي الرقمية</h2>
       <div id="owned"></div>
 <h2>الربط بالخدمات</h2>
@@ -744,8 +745,8 @@ function downloadCert(){
   toast('تم تنزيل الشهادة');
 }
 updateNet();
-document.addEventListener('contextmenu',e=>e.preventDefault());
-document.addEventListener('copy',e=>e.preventDefault());
+document.addEventListener('contextmenu',e=>{ if(!e.target.closest('input,textarea')) e.preventDefault(); });
+document.addEventListener('copy',e=>{ if(!e.target.closest('input,textarea')) e.preventDefault(); });
 go('home');
 </script>
 <script type="module" src="firebase-bridge.js"></script>
@@ -764,6 +765,22 @@ async function deleteWork(id){
     toast('تم حذف العمل');
     renderArtist(); renderStore();
   }catch(e){ toast('تعذّر الحذف: '+e.message); }
+}
+function logoutUI(){
+  if(window.signOutUser) window.signOutUser();
+  toast('تم تسجيل الخروج');
+}
+async function deleteAccountUI(){
+  if(!(window.ozean && window.ozean.user)){ toast('لا يوجد حساب مسجّل'); return; }
+  if(!confirm('حذف حسابك وكل أعمالك نهائياً؟ لا يمكن التراجع عن ذلك.')) return;
+  try{
+    await window.deleteAccount();
+    items=items.filter(x=>!x._remote);
+    toast('تم حذف الحساب');
+    go('home');
+  }catch(e){
+    toast(e.code==='auth/requires-recent-login' ? 'سجّل الخروج ثم الدخول مرة أخرى وأعد المحاولة' : 'تعذّر حذف الحساب: '+e.message);
+  }
 }
 function currentSection(){ const s=document.querySelector('main section.on'); return s?s.id:'home'; }
 window.addEventListener('ozean-auth', async (e)=>{
