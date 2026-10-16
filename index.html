@@ -278,16 +278,16 @@ footer a{color:var(--cyan)}
       <div class="avatar" id="avatarBox" onclick="pickAvatar()" style="cursor:pointer;overflow:hidden" title="اضغط لتغيير صورتك">O</div>
       <input type="file" id="avatarFile" accept="image/*" style="display:none" onchange="onAvatar(event)">
       <small style="color:var(--mute);font-size:12px">اضغط الصورة لإضافة صورتك</small>
-      <b>حسابي</b>
+      <b id="pName">حسابي</b>
       <div style="color:var(--mute);font-size:13px;margin:4px 0 14px">عضو منذ 2026</div>
       <div class="addr" id="addr">لم يتم ربط محفظة</div>
       <div class="lock">🔒 بياناتك خاصة ولا تظهر لأي مستخدم آخر</div>
     </div>
     <div class="box">
       <h2 style="margin-top:0">بياناتي</h2>
-      <div class="kv"><span>البريد الإلكتروني</span><span>t***@gmail.com</span></div>
-      <div class="kv"><span>الجوال</span><span>+218 9• ••• ••••</span></div>
-      <div class="kv"><span>وسيلة الدفع المحفوظة</span><span>•••• 4242</span></div>
+      <div class="kv"><span>البريد الإلكتروني</span><span id="pEmail">—</span></div>
+      <div class="kv"><span>الجوال</span><span>غير مضاف</span></div>
+      <div class="kv"><span>وسيلة الدفع المحفوظة</span><span>لا توجد</span></div>
       <div class="kv"><span>عدد الممتلكات الرقمية</span><span id="statO">0</span></div>
       <h2>ممتلكاتي الرقمية</h2>
       <div id="owned"></div>
@@ -435,6 +435,15 @@ function renderArtist(){
   const mine=items.filter(x=>x.mine);
   $('mywork').innerHTML = mine.length ? mine.map(it=>`<div class="wk"><div class="sw">${thumb(it)}</div><div class="info"><b>${esc(it.title)}</b><small>${priceTxt(it)} · ${CAT[it.cat]}${it.draft?' · مسودة':''}${it.proof?' · موثّق ✔':''}</small></div><div class="sbtns">${shareBtns(it.id)}</div></div>`).join('')
     : '<p style="color:var(--mute);font-size:14px">لا توجد أعمال بعد. ارفع عملك من تبويب "رفع عمل".</p>';
+  const rows=$('mywork').querySelectorAll('.wk');
+  mine.forEach((it,i)=>{
+    const row=rows[i]; if(!row) return;
+    const btn=document.createElement('button');
+    btn.textContent='حذف';
+    btn.className='btn sm ghost';
+    btn.onclick=()=>deleteWork(it.id);
+    row.querySelector('.sbtns').appendChild(btn);
+  });
   $('statW').textContent=mine.length;
   $('statV').textContent=items.reduce((a,x)=>a+(x.views||0),0);
   $('statSh').textContent=state.shares||0;
@@ -746,9 +755,30 @@ function authToggle(){
   else if(window.signIn){ window.signIn(); }
   else { toast('الاتصال بالخدمة غير جاهز بعد'); }
 }
+async function deleteWork(id){
+  const it=find(id); if(!it) return;
+  if(!confirm('حذف العمل "'+it.title+'"؟ لا يمكن التراجع عن ذلك.')) return;
+  try{
+    if(it._docId && window.deleteItem) await window.deleteItem(it._docId);
+    items=items.filter(x=>x!==it);
+    toast('تم حذف العمل');
+    renderArtist(); renderStore();
+  }catch(e){ toast('تعذّر الحذف: '+e.message); }
+}
 function currentSection(){ const s=document.querySelector('main section.on'); return s?s.id:'home'; }
 window.addEventListener('ozean-auth', async (e)=>{
   const u=e.detail;
+  if(u){
+    state.owned=[];
+    $('pEmail').textContent=u.email||'—';
+    $('pName').textContent=u.displayName||'حسابي';
+    if(u.photoURL && !state.profile.avatar){
+      $('avatarBox').innerHTML=`<img src='${u.photoURL}' alt='' style='width:100%;height:100%;object-fit:cover;border-radius:50%'>`;
+    }
+  } else {
+    $('pEmail').textContent='غير مسجّل';
+    $('pName').textContent='حسابي';
+  }
   const b=$('wbtn');
   b.textContent = u ? (u.displayName||'حسابي') : 'تسجيل الدخول';
   b.classList.toggle('on', !!u);

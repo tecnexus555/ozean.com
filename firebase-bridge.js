@@ -3,7 +3,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, updateDoc, getDocs, collection, query, where, addDoc, serverTimestamp }
+import { getFirestore, doc, setDoc, getDoc, updateDoc, getDocs, collection, query, where, addDoc, deleteDoc, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
@@ -117,6 +117,11 @@ window.publishItem = async (item) => {
     }
   }
   return { id: docRef.id, warnings };
+};
+
+window.deleteItem = async (docId) => {
+  if (!window.ozean.user) throw new Error("سجّل الدخول أولاً");
+  await deleteDoc(doc(db, "items", docId));
 };
 
 window.saveAvatar = async (dataUrl) => {
