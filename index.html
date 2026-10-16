@@ -1,89 +1,1100 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#ffffff">
-    <title>Ozean - منصة الإبداع الفني</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root{--bg-color:#fff;--text-main:#0f172a;--text-muted:#64748b;--primary-blue:#0284c7;--primary-cyan:#06b6d4;--border-color:#e2e8f0;--card-bg:#f8fafc}
-        *{box-sizing:border-box;margin:0;padding:0;font-family:'Cairo',sans-serif}
-        body{background:#0f172a;color:var(--text-main);display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding-bottom:80px}
-        .mobile-frame{width:100%;max-width:410px;background:var(--bg-color);min-height:100vh;position:relative;box-shadow:0 0 30px rgba(0,0,0,.5);display:flex;flex-direction:column}
-        .app-header{display:flex;align-items:center;justify-content:space-between;padding:15px 20px;border-bottom:1px solid var(--border-color);background:#fff;position:sticky;top:0;z-index:100}
-        .logo-area{display:flex;align-items:center;text-decoration:none;min-width:120px}
-        .original-logo{display:block;width:126px;height:auto;object-fit:contain}
-        .app-header-icons{display:flex;gap:15px;color:var(--text-main);font-size:16px;align-items:center}
-        .app-header-icons button{border:0;background:transparent;color:inherit;font-size:inherit;padding:3px;cursor:pointer}
-        .app-hero{margin:15px;border-radius:16px;overflow:hidden;position:relative;height:170px;background-image:linear-gradient(180deg,rgba(0,0,0,.1) 0%,rgba(0,0,0,.7) 100%),url('assets/art-portrait.jpg');background-size:cover;background-position:center;display:flex;align-items:flex-end;padding:15px;color:#fff}
-        .app-hero-content h3{font-size:18px;font-weight:800;margin-bottom:2px}
-        .app-hero-content p{font-size:11px;color:#cbd5e1;margin-bottom:8px}
-        .btn-sm-primary{display:inline-block;background:#fff;color:var(--text-main);padding:4px 14px;border-radius:12px;font-size:11px;font-weight:700;text-decoration:none}
-        .section-title-custom{display:flex;justify-content:space-between;align-items:center;padding:0 20px;margin-bottom:12px}
-        .section-title-custom h4{font-size:15px;font-weight:800}
-        .section-title-custom span{font-size:12px;color:var(--primary-blue);cursor:pointer}
-        .categories-grid-app{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:0 15px;margin-bottom:20px}
-        .cat-card-app{background:var(--card-bg);border:1px solid var(--border-color);border-radius:14px;padding:16px 10px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;transition:.2s;cursor:pointer}
-        .cat-card-app:hover,.cat-card-app:focus-visible{border-color:var(--primary-blue);transform:translateY(-2px);outline:none}
-        .cat-card-app i{font-size:20px;color:var(--primary-blue)}
-        .cat-card-app span{font-size:12px;font-weight:700;color:var(--text-main)}
-        .bottom-nav{position:fixed;bottom:0;left:0;right:0;width:100%;max-width:410px;margin:0 auto;background:#fff;border-top:1px solid var(--border-color);display:flex;justify-content:space-around;padding:8px 0 max(8px,env(safe-area-inset-bottom));z-index:1000}
-        .nav-link-app{display:flex;flex-direction:column;align-items:center;gap:1px;text-decoration:none;color:var(--text-muted);font-size:10px;font-weight:700;min-width:50px}
-        .nav-link-app i{font-size:16px;margin-bottom:3px}
-        .nav-link-app.active{color:var(--primary-blue)}
-        .toast{position:fixed;bottom:75px;left:50%;transform:translateX(-50%);background:#0f172a;color:#fff;padding:9px 14px;border-radius:10px;font-size:12px;display:none;z-index:1200;width:max-content;max-width:calc(100% - 24px)}
-        @media(min-width:600px){body{padding-top:20px;padding-bottom:20px}.mobile-frame{min-height:calc(100vh - 40px);border-radius:22px;overflow:hidden}.bottom-nav{bottom:20px;border-radius:0 0 22px 22px}}
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ozean | صنع بحب</title>
+<style>
+:root{--bg:#07090f;--bg2:#0d1220;--panel:rgba(255,255,255,.04);--line:rgba(255,255,255,.08);--txt:#e9eef7;--mute:#8a94a8;--hdr:rgba(7,9,15,.85);--g1:rgba(139,92,246,.18);--g2:rgba(34,211,238,.12);--sh:none;--cyan:#22d3ee;--heart:#fb7185;--grad:linear-gradient(135deg,#22d3ee,#8b5cf6 55%,#fb7185)}
+[data-theme=light]{--bg:#f5f7fb;--bg2:#fff;--panel:#fff;--line:#e2e8f0;--txt:#0f172a;--mute:#64748b;--hdr:rgba(255,255,255,.92);--g1:rgba(139,92,246,.10);--g2:rgba(34,211,238,.12);--sh:0 6px 20px rgba(15,23,42,.07);--cyan:#0891b2}
+:root{--bg:#0a0612;--bg2:#140b22;--panel:rgba(255,255,255,.05);--line:rgba(255,255,255,.1);--cyan:#f472b6;--heart:#fb923c;--g1:rgba(236,72,153,.22);--g2:rgba(249,115,22,.16);--grad:linear-gradient(135deg,#f97316,#ec4899 50%,#8b5cf6)}
+[data-theme=light]{--bg:#fff8f1;--bg2:#ffffff;--panel:#ffffff;--line:#f0dccb;--txt:#2a1a12;--mute:#7c6a5e;--hdr:rgba(255,255,255,.92);--g1:rgba(249,115,22,.14);--g2:rgba(236,72,153,.12);--sh:0 10px 30px rgba(120,53,15,.10);--cyan:#ea580c;--heart:#db2777;--grad:linear-gradient(135deg,#f97316,#ec4899 60%,#8b5cf6)}
+.hero{background:linear-gradient(135deg,rgba(249,115,22,.22),rgba(236,72,153,.18) 50%,rgba(139,92,246,.18))}
+
+:root{--bg:#06122a;--bg2:#0b1d3a;--panel:rgba(255,255,255,.05);--line:rgba(125,211,252,.14);--cyan:#22d3ee;--heart:#38bdf8;--grad:linear-gradient(135deg,#22d3ee,#0ea5e9 55%,#2563eb);--g1:rgba(34,211,238,.16);--g2:rgba(37,99,235,.2)}
+[data-theme=light]{--bg:#f3f8ff;--bg2:#ffffff;--panel:#ffffff;--line:#d6e4f5;--txt:#0b1d3a;--mute:#4b6080;--hdr:rgba(255,255,255,.92);--g1:rgba(34,211,238,.12);--g2:rgba(37,99,235,.10);--cyan:#0284c7;--heart:#0ea5e9;--grad:linear-gradient(135deg,#22d3ee,#0ea5e9 55%,#2563eb)}
+.hero{background:linear-gradient(135deg,rgba(34,211,238,.18),rgba(37,99,235,.22) 55%,rgba(8,47,73,.4))}
+.feat{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:18px}
+.feat div{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 6px;text-align:center;font-size:13px;color:var(--txt)}
+.feat span{display:block;font-size:20px;margin-bottom:4px}
+@media(max-width:760px){.feat{grid-template-columns:repeat(2,1fr)}}
+.hero2{display:grid;grid-template-columns:1.05fr .95fr;gap:22px;align-items:center;border-radius:26px;border:1px solid var(--line);padding:26px;background:linear-gradient(135deg,rgba(14,116,144,.35),rgba(11,29,58,.9));overflow:hidden}
+.hero2 .pill{display:inline-block;font-size:12px;border:1px solid rgba(103,232,249,.4);color:#67e8f9;border-radius:999px;padding:5px 12px;margin-bottom:12px}
+.hero2 h1{font-size:34px;line-height:1.3;margin-bottom:12px}
+.hero2 h1 em{font-style:normal;color:#67e8f9}
+.hero2 p{color:#b6c6dc;line-height:1.8;margin-bottom:6px}
+.hero2-art{position:relative;min-height:300px;border-radius:20px;overflow:hidden;border:1px solid rgba(103,232,249,.25)}
+.hero2-art .banner{width:100%;height:100%;position:absolute;inset:0}
+.float{position:absolute;background:rgba(7,18,38,.92);border:1px solid rgba(103,232,249,.35);border-radius:14px;padding:12px 14px;color:#e9f3ff;box-shadow:0 10px 30px rgba(0,0,0,.35);max-width:200px}
+.float b{display:block;font-size:14px;margin-bottom:4px}
+.float small{color:#9fb3cc;font-size:12px}
+.float .soon{display:inline-block;margin-top:6px;font-size:11px;background:rgba(251,191,36,.2);color:#fbbf24;border-radius:999px;padding:2px 9px}
+.f-auction{right:12px;top:14px}
+.f-cert{left:12px;bottom:14px}
+.f-pay{right:12px;bottom:14px}
+#cats{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px}
+#cats .catc{min-width:116px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px 8px;text-align:center}
+#cats .catc span{display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:50%;background:var(--grad);font-size:22px;margin-bottom:8px}
+.hscroll{display:flex;gap:14px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x mandatory}
+.hscroll .card{min-width:200px;scroll-snap-align:start}
+.cta-band{margin-top:26px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;background:linear-gradient(135deg,rgba(34,211,238,.14),rgba(37,99,235,.18));border:1px solid var(--line);border-radius:20px;padding:20px}
+.cta-band b{display:block;font-size:17px;margin-bottom:4px}
+.cta-band small{color:var(--mute)}
+.catnav{display:flex;gap:18px;overflow-x:auto;padding:12px 16px;border-bottom:1px solid var(--line);font-size:14px}
+.catnav button{background:none;border:0;color:var(--txt);white-space:nowrap;cursor:pointer;padding:4px 0}
+.catnav button:hover{color:var(--cyan)}
+.feat div{background:none;border:0;box-shadow:none}
+.feat span{width:68px;height:68px;border-radius:50%;border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-size:26px;background:transparent}
+.bigcta{text-align:center;margin:26px 0}
+.btn.big{padding:16px 46px;font-size:18px;border-radius:999px;box-shadow:0 10px 30px rgba(34,211,238,.35)}
+@media(max-width:760px){.hero2{grid-template-columns:1fr}.hero2 h1{font-size:26px}.hero2-art{min-height:260px}.float{max-width:160px;font-size:11px}}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Segoe UI",Tahoma,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;transition:background .3s,color .3s;background-image:radial-gradient(900px 500px at 85% -10%,var(--g1),transparent),radial-gradient(700px 400px at -10% 10%,var(--g2),transparent)}
+button,input,select,textarea{font-family:inherit}
+a{color:inherit;text-decoration:none}
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px;background:var(--hdr);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.logo{display:flex;align-items:center;gap:9px;flex:0 0 auto}
+.logo b{font-size:18px}.logo small{display:block;font-size:11px;color:var(--mute)}
+.search{flex:1;max-width:340px;display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 12px;color:var(--mute);font-size:14px}
+.search input{flex:1;background:none;border:0;outline:0;color:var(--txt);font-size:14px;min-width:0}
+.hbtns{display:flex;gap:8px;align-items:center}
+.icon-btn{background:var(--panel);border:1px solid var(--line);color:var(--txt);border-radius:12px;width:40px;height:40px;cursor:pointer;font-size:16px}
+.btn-wallet{background:var(--grad);border:0;color:#06121a;font-weight:700;border-radius:12px;padding:9px 14px;cursor:pointer;font-size:14px;white-space:nowrap}
+.btn-wallet.on{background:var(--panel);color:var(--txt);border:1px solid var(--line)}
+.tabs{display:flex;gap:6px;padding:10px 16px;overflow-x:auto;border-bottom:1px solid var(--line)}
+.tabs button{background:none;border:0;color:var(--mute);padding:8px 14px;border-radius:10px;cursor:pointer;font-size:14px;white-space:nowrap}
+.tabs button.on{background:var(--panel);color:var(--txt);box-shadow:inset 0 -2px 0 var(--cyan)}
+main{padding:18px;max-width:1200px;margin:0 auto}
+section{display:none}section.on{display:block}
+h2{font-size:18px;margin:24px 0 12px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+h2:first-child{margin-top:0}
+.hero{position:relative;overflow:hidden;border-radius:24px;border:1px solid var(--line);padding:36px 22px;background:linear-gradient(160deg,rgba(34,211,238,.12),rgba(139,92,246,.12) 50%,rgba(251,113,133,.08))}
+.hero h1{font-size:28px;line-height:1.4;margin-bottom:10px}
+.hero h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;color:transparent}
+.hero p{color:var(--mute);max-width:560px;line-height:1.8}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.btn{background:var(--grad);border:0;color:#06121a;font-weight:700;border-radius:12px;padding:11px 20px;cursor:pointer;font-size:15px}
+.btn.ghost{background:var(--panel);color:var(--txt);border:1px solid var(--line)}
+.btn.sm{padding:7px 12px;font-size:13px;border-radius:10px}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:20px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center;box-shadow:var(--sh)}
+.stat b{display:block;font-size:20px}.stat small{color:var(--mute);font-size:12px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px}
+.chip{background:var(--panel);border:1px solid var(--line);color:var(--txt);border-radius:999px;padding:7px 14px;font-size:13px;cursor:pointer;white-space:nowrap}
+.chip.on{background:var(--grad);color:#06121a;border-color:transparent;font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:transform .25s,border-color .25s;cursor:pointer;box-shadow:var(--sh)}
+.card:hover{transform:translateY(-4px);border-color:var(--cyan)}
+.art{aspect-ratio:1/1;position:relative;overflow:hidden;background:var(--bg2)}
+.art>svg,.art>img,.art>video{width:100%;height:100%;display:block;object-fit:cover}
+.wm{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.2);font-weight:800;font-size:22px;transform:rotate(-20deg);pointer-events:none;letter-spacing:4px}
+.badge{position:absolute;top:10px;right:10px;background:rgba(7,9,15,.7);color:#fff;border:1px solid rgba(255,255,255,.15);border-radius:999px;font-size:11px;padding:4px 9px}
+.play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;background:rgba(7,9,15,.6);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;pointer-events:none}
+.meta{padding:12px}
+.meta b{display:block;font-size:15px;margin-bottom:2px}
+.meta small{color:var(--mute);font-size:12px}
+.row2{display:flex;justify-content:space-between;align-items:center;margin-top:10px;border-top:1px solid var(--line);padding-top:10px}
+.price{font-weight:800;font-size:15px}
+.timer{font-size:12px;color:var(--heart)}
+.verified{color:var(--cyan)}
+.strip{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px}
+.catc{min-width:140px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;cursor:pointer;text-align:center;box-shadow:var(--sh)}
+.catc span{font-size:26px;display:block;margin-bottom:6px}
+.reel-wrap{height:70vh;overflow-y:scroll;scroll-snap-type:y mandatory;border-radius:24px;max-width:380px;margin:0 auto;border:1px solid var(--line);scrollbar-width:none}
+.reel{height:100%;scroll-snap-align:start;position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding:22px;overflow:hidden;color:#fff}
+.reel .c{position:relative;z-index:1}
+.reel .tag{display:inline-block;background:rgba(7,9,15,.5);border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:4px 10px;font-size:12px;margin-bottom:10px}
+.reel h3{font-size:24px;margin-bottom:6px}
+.reel p{color:#e5ebf5;font-size:14px;line-height:1.7;margin-bottom:14px}
+.reel .ad{position:absolute;top:14px;right:14px;z-index:2;font-size:11px;background:rgba(7,9,15,.6);padding:3px 8px;border-radius:6px}
+.r1{background:linear-gradient(160deg,#0e7490,#4c1d95)}
+.r2{background:linear-gradient(160deg,#be123c,#7c2d12)}
+.r3{background:linear-gradient(160deg,#065f46,#0f172a)}
+.pf{display:grid;grid-template-columns:1fr 2fr;gap:14px}
+.detail{display:grid;grid-template-columns:1.1fr 1fr;gap:18px}
+.detail .art{border-radius:20px;border:1px solid var(--line)}
+.detail h1{font-size:24px;margin:8px 0 6px}
+.desc{color:var(--mute);line-height:1.8;margin:12px 0;font-size:14px}
+.notice{background:var(--bg2);border:1px dashed var(--line);border-radius:12px;padding:10px 12px;font-size:13px;color:var(--mute);margin:10px 0}
+.verified-tag{display:inline-block;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:12px}
+@media(max-width:760px){.pf,.detail{grid-template-columns:1fr!important}.stats{grid-template-columns:repeat(2,1fr)}.hero h1{font-size:22px}.top{flex-wrap:wrap}.search{display:flex;max-width:none;order:3;width:100%;flex-basis:100%}}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--sh)}
+.avatar{width:84px;height:84px;border-radius:50%;background:var(--grad);margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:30px;color:#06121a;font-weight:800}
+.kv{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line);font-size:14px;gap:10px}
+.kv:last-child{border:0}.kv span:first-child{color:var(--mute)}
+.lock{font-size:12px;color:var(--cyan);margin-top:12px;text-align:center}
+.addr{font-family:monospace;font-size:12px;background:var(--bg2);padding:8px;border-radius:10px;word-break:break-all;color:var(--mute)}
+.link-row{display:flex;gap:8px;margin:12px 0}
+.link-row input{flex:1;min-width:0;background:var(--bg2);border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:9px 10px;font-size:13px;direction:ltr}
+.switch{display:flex;justify-content:space-between;align-items:center;padding:12px 0;font-size:14px;border-top:1px solid var(--line);margin-top:8px}
+.switch input{width:18px;height:18px;accent-color:var(--cyan)}
+.wk,.own{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.sw{width:52px;height:52px;border-radius:12px;flex:0 0 auto;overflow:hidden;position:relative}
+.sw>*:not(.play){width:100%;height:100%;object-fit:cover;display:block}
+.sw .play{width:22px;height:22px;font-size:9px}
+.wk .info{flex:1;min-width:140px}.wk .info b{display:block;font-size:14px}.wk .info small{color:var(--mute);font-size:12px}
+.sbtns{display:flex;gap:6px;flex-wrap:wrap}
+.sbtns button{background:var(--bg2);border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:6px 10px;font-size:12px;cursor:pointer}
+.sbtns button:hover{border-color:var(--cyan)}
+.fld{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.fld label{font-size:13px;color:var(--mute)}
+.fld input,.fld select,.fld textarea{background:var(--bg2);border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:10px;font-size:14px;outline:0}
+.fld input:focus,.fld textarea:focus,.fld select:focus{border-color:var(--cyan)}
+.prev{display:none;width:100%;max-height:260px;object-fit:contain;border-radius:12px;margin-top:6px;background:var(--bg2)}
+.upbox{max-width:640px;margin:0 auto}
+.modal{position:fixed;inset:0;background:rgba(3,5,10,.6);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal.on{display:flex}
+.sheet{background:var(--bg2);color:var(--txt);border:1px solid var(--line);border-radius:22px;max-width:420px;width:100%;padding:22px;position:relative}
+.pm{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.pm label{flex:1;min-width:110px;text-align:center;border:1px solid var(--line);border-radius:12px;padding:12px;cursor:pointer;font-size:14px;background:var(--panel)}
+.pm input{display:none}
+.pm label:has(input:checked){border-color:var(--cyan);color:var(--cyan);font-weight:700}
+.sum{display:flex;justify-content:space-between;padding:10px 0;color:var(--mute);font-size:14px}
+.sum.t{color:var(--txt);font-weight:800;font-size:17px;border-top:1px solid var(--line);margin-top:6px;padding-top:12px}
+.sheet .btn{width:100%;margin-top:10px}
+.x{position:absolute;top:12px;left:14px;background:none;border:0;color:var(--mute);font-size:22px;cursor:pointer}
+@media print{body *{visibility:hidden!important}#certPrint,#certPrint *{visibility:visible!important}#certPrint{position:fixed;inset:0;margin:auto;height:max-content}}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--txt);color:var(--bg);padding:10px 18px;border-radius:12px;font-size:14px;transition:transform .3s;z-index:60;max-width:90%;text-align:center}
+.toast.on{transform:translateX(-50%) translateY(0)}
+footer{margin-top:40px;border-top:1px solid var(--line);padding:22px 16px;color:var(--mute);font-size:13px}
+footer .f{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
+footer a{color:var(--cyan)}
+
+.r-hero{background:linear-gradient(180deg,#0b1d3a,#06122a);border:1px solid var(--line);border-radius:24px;padding:26px 18px}
+.r-top{text-align:center;margin-bottom:18px}
+.r-top h1{font-size:32px;line-height:1.3;margin-bottom:6px}
+.r-top h1 em{font-style:normal;color:#67e8f9}
+.r-top p{color:#b6c6dc}
+.r-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:14px}
+.r-feature{position:relative;border-radius:18px;overflow:hidden;min-height:260px;border:1px solid rgba(103,232,249,.3)}
+.r-feature svg{position:absolute;inset:0;width:100%;height:100%}
+.r-feature-text{position:absolute;right:16px;bottom:16px;color:#fff;max-width:70%}
+.r-feature-text b{display:block;font-size:20px;margin-bottom:4px}
+.r-feature-text small{color:#dbe7f5;display:block;margin-bottom:10px}
+.r-auction{position:relative;border-radius:18px;padding:18px;background:linear-gradient(160deg,rgba(14,116,144,.5),rgba(7,18,38,.95));border:1px solid rgba(103,232,249,.3);cursor:pointer;display:flex;flex-direction:column;justify-content:flex-end;color:#fff;min-height:260px}
+.r-auction b{font-size:20px;margin-bottom:6px}
+.r-auction small{color:#dbe7f5;margin-bottom:12px}
+.r-badge{position:absolute;top:14px;right:14px;background:#fbbf24;color:#1f1400;border-radius:999px;font-size:12px;padding:3px 10px;font-weight:700}
+.hscroll .card{position:relative}
+.hscroll .card .art{aspect-ratio:4/3}
+.feat span{font-size:28px}
+@media(max-width:760px){.r-grid{grid-template-columns:1fr}.r-top h1{font-size:24px}.r-feature,.r-auction{min-height:200px}}
+
+.r-wrap{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:1000px){.r-wrap{grid-template-columns:250px 1fr}}
+.r-side{display:flex;flex-direction:column;gap:12px}
+.box2{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;font-size:13px;color:var(--mute)}
+.box2 b{display:block;margin-bottom:8px;color:var(--txt);font-size:14px}
+.row3{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:10px;background:var(--bg2);margin-bottom:6px;cursor:pointer;color:var(--txt)}
+.row3:hover{color:var(--cyan)}
+
+@media(max-width:760px){#cats{display:grid;grid-template-columns:repeat(3,1fr);overflow:visible}#cats .catc{min-width:0;padding:10px 4px}#cats .catc span{width:44px;height:44px;font-size:18px}.catnav{gap:14px;font-size:13px}}
+@media(min-width:761px) and (max-width:1000px){.r-wrap{grid-template-columns:1fr}.r-side{flex-direction:row;flex-wrap:wrap}.r-side .box2{flex:1 1 220px}}
+
+@media(max-width:760px){.r-wrap{display:flex;flex-direction:column}.r-hero{order:1}.r-side{order:2;display:grid;grid-template-columns:1fr 1fr;gap:10px}.r-side .box2{padding:10px;font-size:12px}.r-side .box2 b{font-size:13px;margin-bottom:6px}.r-side .row3{padding:6px 8px;font-size:12px}}
+
+.bnav{display:none}
+@media(max-width:760px){.tabs{display:none}.bnav{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:30;background:var(--hdr);backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:8px 6px calc(8px + env(safe-area-inset-bottom,0px));justify-content:space-around}.bnav button{background:none;border:0;color:var(--mute);font-size:12px;cursor:pointer;padding:4px 6px}.bnav button:hover{color:var(--cyan)}body{padding-bottom:72px}}
+</style>
 </head>
 <body>
-<div class="mobile-frame" id="home">
-    <header class="app-header">
-        <a class="logo-area" href="#home" aria-label="Ozean - صنع بحب"><img src="assets/ozean-logo-original.png" alt="Ozean — صنع بحب" class="original-logo"></a>
-        <div class="app-header-icons">
-            <button type="button" aria-label="بحث" data-message="البحث قيد التجهيز"><i class="fa-solid fa-magnifying-glass"></i></button>
-            <button type="button" aria-label="حساب المستخدم" data-message="صفحة الحساب قيد التجهيز"><i class="fa-regular fa-user"></i></button>
-            <button type="button" aria-label="القائمة" data-message="القائمة قيد التجهيز"><i class="fa-solid fa-bars"></i></button>
-        </div>
-    </header>
-    <section class="app-hero" aria-label="اكتشف الأعمال الفنية">
-        <div class="app-hero-content"><h3>إبداع بلا حدود</h3><p>اكتشف أفضل الأعمال الفنية الحصرية</p><a href="#categories" class="btn-sm-primary">تصفح الآن</a></div>
-    </section>
-    <section id="categories" aria-labelledby="categories-title">
-        <div class="section-title-custom"><h4 id="categories-title">التصنيفات</h4><span role="button" tabindex="0" id="show-all">عرض الكل</span></div>
-        <div class="categories-grid-app" id="categories-grid">
-            <div class="cat-card-app" tabindex="0" role="button" data-category="اللوحات"><i class="fa-solid fa-palette"></i><span>اللوحات</span></div>
-            <div class="cat-card-app" tabindex="0" role="button" data-category="الصور"><i class="fa-solid fa-camera"></i><span>الصور</span></div>
-            <div class="cat-card-app" tabindex="0" role="button" data-category="الموسيقى"><i class="fa-solid fa-music"></i><span>الموسيقى</span></div>
-            <div class="cat-card-app" tabindex="0" role="button" data-category="الفيديو"><i class="fa-solid fa-video"></i><span>الفيديو</span></div>
-            <div class="cat-card-app" tabindex="0" role="button" data-category="الأزياء"><i class="fa-solid fa-shirt"></i><span>الأزياء</span></div>
-            <div class="cat-card-app" tabindex="0" role="button" data-category="الأحذية"><i class="fa-solid fa-shoe-prints"></i><span>الأحذية</span></div>
-            <div class="cat-card-app" tabindex="0" role="button" data-category="المجوهرات"><i class="fa-solid fa-gem"></i><span>المجوهرات</span></div>
-            <div class="cat-card-app" tabindex="0" role="button" data-category="التصاميم"><i class="fa-solid fa-compass-drafting"></i><span>التصاميم</span></div>
-        </div>
-    </section>
-    <nav class="bottom-nav" aria-label="التنقل الرئيسي">
-        <a href="#home" class="nav-link-app active" data-nav="الرئيسية"><i class="fa-solid fa-house"></i><span>الرئيسية</span></a>
-        <a href="#store" class="nav-link-app" data-nav="المتجر"><i class="fa-solid fa-store"></i><span>المتجر</span></a>
-        <a href="#auctions" class="nav-link-app" data-nav="المزادات"><i class="fa-solid fa-gavel"></i><span>المزادات</span></a>
-        <a href="#upload" class="nav-link-app" data-nav="رفع عمل"><i class="fa-solid fa-circle-plus"></i><span>رفع عمل</span></a>
-        <a href="#account" class="nav-link-app" data-nav="حسابي"><i class="fa-regular fa-user"></i><span>حسابي</span></a>
-    </nav>
-    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<header class="top">
+  <div class="logo">
+    <svg width="44" height="44" viewBox="0 0 100 100" aria-label="Ozean"><defs><linearGradient id="ozg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#67e8f9"/><stop offset="1" stop-color="#2563eb"/></linearGradient></defs><circle cx="50" cy="50" r="38" fill="none" stroke="url(#ozg)" stroke-width="12"/><path d="M14 64 Q30 52 46 64 T78 64 T100 62" fill="none" stroke="#22d3ee" stroke-width="6" stroke-linecap="round"/></svg>
+    <div><b>Ozean</b><small>صنع بحب</small></div>
+  </div>
+  <label class="search">🔎<input id="q" placeholder="ابحث عن عمل، فنان، أو مجموعة" oninput="onSearch()"></label>
+  <div class="hbtns">
+    <button class="icon-btn" id="sbtn" onclick="openStatus()" title="حالة الاتصال والمزامنة" style="width:auto;padding:0 10px;font-size:12px">● محلي</button>
+    <button class="icon-btn" id="tbtn" onclick="toggleTheme()" title="الوضع">☀️</button>
+    <button class="btn-wallet" id="wbtn" onclick="authToggle()">ربط المحفظة</button>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="on" data-t="home" onclick="go('home')">الرئيسية</button>
+  <button data-t="store" onclick="go('store')">المتجر</button>
+  <button data-t="reels" onclick="go('reels')">العروض</button>
+  <button data-t="artist" onclick="go('artist')">لوحة الفنان</button>
+  <button data-t="upload" onclick="go('upload')">رفع عمل</button>
+  <button data-t="profile" onclick="go('profile')">حسابي</button>
+</nav>
+<div class="catnav">
+  <button onclick="setCat('all',true)">الكل</button>
+  <button onclick="setCat('paint',true)">لوحات</button>
+  <button onclick="setCat('photo',true)">صور</button>
+  <button onclick="setCat('music',true)">موسيقى</button>
+  <button onclick="setCat('video',true)">فيديو</button>
+  <button onclick="setCat('fashion',true)">أزياء</button>
+  <button onclick="setCat('footwear',true)">أحذية</button>
+  <button onclick="setCat('accessories',true)">إكسسوارات</button>
+  <button onclick="setCat('jewelry',true)">مجوهرات</button>
+  <button onclick="setCat('graphic',true)">تصاميم</button>
 </div>
+
+<main>
+
+<section id="home" class="on">
+  <div class="r-wrap">
+  <aside class="r-side">
+    <div class="box2"><b>لوحة الفنان</b>
+      <div class="row3" onclick="go('artist')">لوحاتي <span>›</span></div>
+      <div class="row3" onclick="go('artist')">إحصائيات المبيعات <span>›</span></div>
+      <div class="row3" onclick="go('profile')">طلبات العملاء <span>›</span></div>
+      <div class="row3" onclick="go('profile')">إعدادات الحساب <span>›</span></div>
+    </div>
+    <div class="box2"><b>شهادة إثبات الملكية</b><small>توثيق أصالة العمل الفني</small>
+      <div style="margin-top:8px"><button class="btn sm ghost" onclick="go('upload')">وثّق عملك</button></div>
+    </div>
+    <div class="box2"><b>الدفع بالدينار الليبي</b><small>الدفع الإلكتروني قريباً</small></div>
+  </aside>
+  <div class="r-hero">
+    <div class="r-top">
+      <h1>اكتشف الإبداع في <em>Ozean</em></h1>
+      <p>أعمال فنية، مزادات، وتصاميم من مبدعين</p>
+    </div>
+    <div class="r-grid">
+      <div class="r-feature">
+        <svg viewBox="0 0 600 340" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <defs>
+            <linearGradient id="rf1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0e7490"/><stop offset=".55" stop-color="#1d4ed8"/><stop offset="1" stop-color="#0b1d3a"/></linearGradient>
+            <linearGradient id="rf2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbbf24"/><stop offset="1" stop-color="#fb7185"/></linearGradient>
+          </defs>
+          <rect width="600" height="340" fill="url(#rf1)"/>
+          <circle cx="440" cy="120" r="62" fill="url(#rf2)" opacity=".9"/>
+          <path d="M0 230 Q130 190 260 230 T520 230 T600 225 L600 340 L0 340Z" fill="#06213f" opacity=".85"/>
+        </svg>
+        <div class="r-feature-text">
+          <b>أعمال فنية أصلية</b>
+          <small>من مبدعين موهوبين، مع شهادة ملكية لكل عمل</small>
+          <button class="btn sm" onclick="go('store')">تصفح الأعمال</button>
+        </div>
+      </div>
+      <div class="r-auction" onclick="setCat('auction',true)">
+        <span class="r-badge">مزادات</span>
+        <b>مزادات حية</b>
+        <small>فرصتك لامتلاك أعمال فنية مميزة</small>
+        <button class="btn ghost sm">تصفح المزادات</button>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><b>1,284</b><small>عمل مُسجل</small></div>
+    <div class="stat"><b>312</b><small>فنان معتمد</small></div>
+    <div class="stat"><b>86</b><small>مزاد نشط</small></div>
+    <div class="stat"><b>4.8K</b><small>مقتنٍ</small></div>
+  </div>
+
+  <h2>الأقسام</h2>
+  <div class="strip" id="cats"></div>
+
+  <h2>أحدث المنتجات <a href="#" onclick="go('store');return false">عرض الكل</a></h2>
+  <div class="hscroll" id="latest"></div>
+
+  <div class="feat"><div><span>👥</span>مبدعون حقيقيون</div><div><span>🛡️</span>أعمال أصلية</div><div><span>🔨</span>مزادات مميزة</div><div><span>♡</span>دعم الفنانين</div><div><span>🔒</span>تجربة آمنة</div></div>
+  <div class="bigcta"><button class="btn big" onclick="go('store')">تصفّح المتجر</button></div>
+
+  <div class="cta-band">
+    <div>
+      <b>انضم إلى Ozean الآن</b>
+      <small>tecnexus555@gmail.com</small>
+    </div>
+    <button class="btn" onclick="go('upload')">ابدأ الآن</button>
+  </div>
+</section>
+
+<section id="store">
+  <div class="chips" id="chips"></div>
+  <div class="grid" id="store-grid"></div>
+<div id="sentinel" style="height:1px"></div>
+  <p id="empty" style="display:none;color:var(--mute);padding:30px 0;text-align:center">لا توجد نتائج مطابقة.</p>
+</section>
+
+<section id="detail">
+  <div class="detail" id="detailBox"></div>
+</section>
+
+<section id="reels">
+  <h2>العروض والإعلانات</h2>
+  <div class="reel-wrap">
+    <div class="reel r1">
+      <span class="ad">إعلان مموّل</span>
+      <div class="c"><span class="tag">مجموعة حصرية</span><h3>عصر الضوء</h3><p>لوحات رقمية مُثبتة الملكية بإصدار محدود من 50 قطعة.</p><button class="btn sm" onclick="setCat('paint',true)">اطلع على المجموعة</button></div>
+    </div>
+    <div class="reel r2">
+      <span class="ad">خصم 20%</span>
+      <div class="c"><span class="tag">عرض محدود</span><h3>صور الطبيعة</h3><p>خصم خاص على مجموعة الصور الفوتوغرافية عند أول عملية شراء.</p><button class="btn sm" onclick="setCat('photo',true)">تسوّق الآن</button></div>
+    </div>
+    <div class="reel r3">
+      <span class="ad">جديد</span>
+      <div class="c"><span class="tag">مقاطع</span><h3>صدى الغابة</h3><p>موسيقى ومقاطع فيديو مُسجلة، مع معاينة قبل الشراء.</p><button class="btn sm" onclick="setCat('music',true)">استمع وتصفح</button></div>
+    </div>
+  </div>
+</section>
+
+<section id="artist">
+  <div class="pf">
+    <div class="box">
+      <h2 style="margin-top:0">صفحتي العامة</h2>
+      <p style="color:var(--mute);font-size:14px;line-height:1.7">اعرض أعمالك لجمهور المنصة وشاركها مباشرة على منصات التواصل.</p>
+      <div class="link-row">
+        <input id="plink" readonly value="https://ozean.app/artist/your-page">
+        <button class="btn sm" onclick="copyText('https://ozean.app/artist/your-page')">نسخ</button>
+      </div>
+      <label class="switch"><span>إظهار الصفحة للعموم</span><input type="checkbox" checked onchange="state.pub=this.checked;toast(this.checked?'الصفحة ظاهرة للعموم':'الصفحة مخفية عن العموم')"></label>
+      <label class="switch"><span>السماح بالمشاركة من المنصة</span><input type="checkbox" checked onchange="state.share=this.checked;toast(this.checked?'المشاركة مفعّلة':'المشاركة معطّلة')"></label>
+      
+      <div class="cta"><button class="btn sm" onclick="share('native','صفحتي على Ozean','https://ozean.app/artist/your-page')">مشاركة الصفحة</button></div>
+    </div>
+    <div class="box">
+      <h2 style="margin-top:0">أعمالي للعرض والمشاركة</h2>
+      <div class="stats" style="grid-template-columns:repeat(2,1fr);margin:0 0 12px">
+        <div class="stat"><b id="statW">0</b><small>أعمالي</small></div>
+        <div class="stat"><b id="statS">0</b><small>مبيعات</small></div>
+      </div>
+      <div id="mywork"></div>
+<div class='stats' style='grid-template-columns:repeat(2,1fr);margin:14px 0 8px'><div class='stat'><b id='statV'>0</b><small>مشاهدات</small></div><div class='stat'><b id='statSh'>0</b><small>مشاركات</small></div></div>
+<h2>منشورات جاهزة للنشر</h2>
+<div id='posts'></div>
+    </div>
+  </div>
+</section>
+
+<section id="upload">
+  <div class="box upbox">
+    <h2 style="margin-top:0">رفع عمل جديد</h2>
+    <div class="fld"><label>نوع العمل</label>
+      <select id="f_type" onchange="onType()">
+        <option value="paint">لوحة</option>
+        <option value="photo">صورة</option>
+        <option value="music">موسيقى</option>
+        <option value="video">فيديو</option>
+        <option value="craft">منتج يدوي</option>
+        <option value="fashion">أزياء</option>
+        <option value="footwear">أحذية</option>
+        <option value="accessories">إكسسوارات</option>
+        <option value="jewelry">مجوهرات</option>
+        <option value="decor">ديكور</option>
+        <option value="graphic">تصميم رقمي</option>
+      </select>
+    </div>
+    <div class="fld"><label>الملف (يمكن اختيار حتى 4 صور للعمل الواحد)</label>
+      <input type="file" id="f_file" multiple accept="image/*" onchange="onFile(event)">
+      <img id="f_img" class="prev" alt="">
+      <video id="f_vid" class="prev" controls muted playsinline></video>
+      <audio id="f_aud" class="prev" controls></audio>
+    </div>
+    <div class="fld"><label>شكل العلامة المائية</label><select id="f_wm"><option value="light">خفيفة ومتباعدة (افتراضي)</option><option value="corner">زاوية فقط (لا تشوّه العمل)</option></select></div>
+    <div class="fld"><label>اسم العمل</label><input id="f_title" placeholder="مثال: غروب الواحة"></div>
+    <div class="fld"><label>طريقة التسعير</label><select id="f_mode" onchange="onMode()"><option value="fixed">سعر ثابت</option><option value="free">مجاني</option><option value="nego">بالتفاوض / عند الطلب</option></select></div>
+    <div class="fld"><label>العملة والسعر</label><div style="display:flex;gap:8px"><select id="f_cur" style="flex:0 0 170px"><option value="LYD">دينار ليبي (د.ل)</option><option value="USD">دولار ($)</option><option value="EUR">يورو (€)</option><option value="SAR">ريال سعودي (ر.س)</option><option value="USDT">USDT (عملة مستقرة)</option><option value="ETH">إيثيريوم (ETH)</option><option value="BTC">بيتكوين (BTC)</option></select><input id="f_price" type="number" min="0" step="any" placeholder="مثال: 800" style="flex:1;min-width:0"></div></div>
+    <div class="fld"><label>الوصف</label><textarea id="f_desc" rows="3" placeholder="وصف مختصر للعمل"></textarea></div>
+    <label class='switch'><span>عرض كمزاد</span><input type='checkbox' id='f_auc'></label>
+    <div class='fld'><label>سعر بداية المزاد (بعملة العمل)</label><input id='f_aucStart' type='number' min='1' step='any'></div>
+    <div class='fld'><label>أقل زيادة في المزايدة</label><input id='f_aucStep' type='number' min='1' step='any' value='10'></div>
+    <div class='fld'><label>ينتهي في</label><input id='f_aucEnd' type='datetime-local'></div>
+    <div class='fld'><label>نسبة المنصة من هذا العمل (من 5% إلى 30%)</label><input id='f_pct' type='number' min='5' max='30' step='0.5' value='10'></div>
+    <div class='fld'><label>أقل عمولة بالدولار لكل عملية بيع</label><input id='f_minfee' type='number' min='0.5' step='0.1' value='0.5'></div>
+    <div class='fld'><label>رابط الملف الأصلي في Google Drive (اختياري)</label><input id='f_drive' type='url' placeholder='https://drive.google.com/...'></div>
+    <label class="switch"><span>نشر في المتجر</span><input type="checkbox" id="f_pub" checked></label>
+    <p style="color:var(--mute);font-size:12px;margin:6px 0 4px">الصور تُعلَّم تلقائياً بعلامة مائية. الموسيقى والفيديو يُعرضان بمعاينة قصيرة.</p>
+    <div class='fld'><label>مراحل العمل (اختياري: صور أو فيديو لمراحل الرسم)</label><input type='file' id='f_stages' multiple accept='image/*,video/*' onchange='onStages(event)'><small id='stageInfo' style='color:var(--mute)'>لم تُضف مراحل</small></div>
+<label class='switch'><span>توثيق العمل وإصدار شهادة بصمة</span><input type='checkbox' id='f_cert' checked></label>
+<div class='cta'><button class='btn' onclick='submitWork()'>نشر العمل</button></div>
+<div class='notice' style='margin-top:18px'><b style='color:var(--txt)'>التحقق من ملكية ملف</b><p style='margin:6px 0'>ارفع ملفاً لمعرفة إن كان مطابقاً لعمل موثّق في المنصة.</p><input type='file' id='v_file' onchange='verifyFile(event)'><div id='verifyRes' style='margin-top:8px;font-size:13px'></div></div>
+  </div>
+</section>
+
+<section id="profile">
+  <div class="pf">
+    <div class="box" style="text-align:center">
+      <div class="avatar" id="avatarBox" onclick="pickAvatar()" style="cursor:pointer;overflow:hidden" title="اضغط لتغيير صورتك">O</div>
+      <input type="file" id="avatarFile" accept="image/*" style="display:none" onchange="onAvatar(event)">
+      <small style="color:var(--mute);font-size:12px">اضغط الصورة لإضافة صورتك</small>
+      <b id="pName">حسابي</b>
+      <div style="color:var(--mute);font-size:13px;margin:4px 0 14px">عضو منذ 2026</div>
+      <div class="addr" id="addr">لم يتم ربط محفظة</div>
+      <div class="lock">🔒 بياناتك خاصة ولا تظهر لأي مستخدم آخر</div>
+    </div>
+    <div class="box">
+      <h2 style="margin-top:0">بياناتي</h2>
+      <div class="kv"><span>البريد الإلكتروني</span><span id="pEmail">—</span></div>
+      <div class="kv"><span>الجوال</span><span><input id='pPhone' type='tel' placeholder='+218...' onchange='savePhone(this.value)' style='background:transparent;border:0;color:inherit;text-align:left;width:160px'></span></div>
+      <div class="kv"><span>من يرى رقمي</span><span><select id='pPrivacy' onchange='savePhone(document.getElementById("pPhone").value)' style='background:var(--bg2);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:4px'><option value='private'>خاص، لا يظهر لأحد</option><option value='buyers'>للمشترين بعد الشراء فقط</option><option value='public'>للجميع</option></select></span></div>
+      <div class="kv"><span>وسيلة الدفع المحفوظة</span><span>لا توجد</span></div>
+      <div class="kv"><span>عدد الممتلكات الرقمية</span><span id="statO">0</span></div>
+      <div class='cta' style='margin:12px 0'><button class='btn ghost' onclick='logoutUI()'>تسجيل الخروج</button><button class='btn ghost' onclick='deleteAccountUI()' style='color:#dc2626'>حذف الحساب</button></div>
+      <h2>ممتلكاتي الرقمية</h2>
+      <div id="owned"></div>
+<h2>الربط بالخدمات</h2>
+<div id="services"></div>
+<h2>روابط المشاركة وتتبعها</h2>
+<div id="linksBox"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="f">
+    <div><b style="color:var(--txt)">Ozean</b> · صنع بحب</div>
+    <div>للتواصل والدعم: <a href="mailto:tecnexus555@gmail.com">tecnexus555@gmail.com</a></div>
+    <div>© Ozean · جميع الحقوق محفوظة</div>
+  </div>
+</footer>
+
+<div class="modal" id="modal" onclick="if(event.target===this)closeM()">
+  <div class="sheet">
+    <button class="x" onclick="closeM()">×</button>
+    <h3 id="mt" style="margin-bottom:12px">إتمام الشراء</h3>
+    <div class="sum"><span id="mn">—</span><span id="mp"></span></div>
+    <div class="pm">
+      <label><input type="radio" name="pm" checked><span>💳 بطاقة</span></label>
+      <label><input type="radio" name="pm"><span>🏦 مصرف</span></label>
+      <label><input type="radio" name="pm"><span>📱 محفظة إلكترونية</span></label>
+    </div>
+    <div class="sum t"><span>الإجمالي</span><span id="mt2"></span></div>
+    <button class="btn" onclick="payNow()">ادفع الآن</button>
+  </div>
+</div>
+
+<div class='modal' id='certModal' onclick='if(event.target===this)closeCert()'><div class='sheet' style='max-width:640px;max-height:90vh;overflow:auto'><button class='x' onclick='closeCert()'>×</button><div id='certBox'></div><div class='cta' style='margin-top:14px'><button class='btn' onclick='printCert()'>طباعة / حفظ PDF</button><button class='btn ghost' onclick='downloadCert()'>تنزيل HTML</button><button class='btn ghost' onclick='closeCert()'>إغلاق</button></div></div></div>
+<div class='modal' id='statusModal' onclick='if(event.target===this)closeStatus()'><div class='sheet' style='max-width:460px'><button class='x' onclick='closeStatus()'>×</button><h3 style='margin-bottom:10px'>حالة الاتصال والمزامنة</h3><div id='stBox'></div><div class='cta' style='margin-top:12px'><button class='btn' onclick='openStatus()'>إعادة الفحص</button></div></div></div>
+<nav class="bnav" aria-label="تنقل سفلي">
+  <button onclick="go('home')">الرئيسية</button>
+  <button onclick="go('store')">المتجر</button>
+  <button onclick="go('artist')">لوحة الفنان</button>
+  <button onclick="go('upload')">رفع عمل</button>
+  <button onclick="go('profile')">حسابي</button>
+</nav>
+<div class="toast" id="toast"></div>
+
 <script>
-const toast=document.getElementById('toast');let toastTimeout;
-function showToast(message){toast.textContent=message;toast.style.display='block';clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>toast.style.display='none',2200)}
-document.querySelectorAll('[data-message]').forEach(button=>button.addEventListener('click',()=>showToast(button.dataset.message)));
-document.querySelectorAll('.cat-card-app').forEach(card=>{
- const activate=()=>{document.querySelectorAll('.cat-card-app').forEach(item=>item.style.background='');card.style.background='#e0f2fe';showToast('تم اختيار تصنيف: '+card.dataset.category)};
- card.addEventListener('click',activate);card.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();activate()}});
+const $=id=>document.getElementById(id);
+const CAT={paint:'لوحة',photo:'صورة',music:'موسيقى',video:'فيديو',craft:'منتج يدوي',fashion:'أزياء',footwear:'أحذية',accessories:'إكسسوارات',jewelry:'مجوهرات',decor:'ديكور',graphic:'تصميم رقمي'};
+const ICON={paint:'🎨',photo:'📷',music:'🎵',video:'🎬',craft:'🧶',fashion:'👗',footwear:'👟',accessories:'👜',jewelry:'💍',decor:'🛋️',graphic:'🖌️'};
+const LINK='https://ozean.app/artist/your-page';
+const PAL=[['#22d3ee','#8b5cf6','circle'],['#fb7185','#f59e0b','rect'],['#34d399','#0ea5e9','wave'],['#a78bfa','#f472b6','circle'],['#f97316','#facc15','rect'],['#38bdf8','#1e1b4b','wave'],['#4ade80','#14532d','circle'],['#e879f9','#312e81','rect']];
+
+// بيانات تجريبية
+let items=[
+ {id:1,title:'عصر الضوء #07',cat:'paint',artist:'مجموعة المحيط',price:1200,desc:'لوحة بإصدار محدود، مُثبتة الملكية بشهادة رقمية.',mine:true},
+ {id:2,title:'غروب المحيط #12',cat:'paint',artist:'مجموعة المحيط',price:800,desc:'لوحة تجسد لحظة الغروب على الساحل.',mine:true},
+ {id:3,title:'حلم الصحراء',cat:'paint',artist:'مجموعة الرمال',price:180,cur:'USD',desc:'لوحة مائية بألوان دافئة.'},
+ {id:4,title:'شروق الصحراء',cat:'photo',artist:'عدسة الرمال',price:150,desc:'صورة فوتوغرافية بدقة عالية، للاستخدام وفق الترخيص.',mine:true},
+ {id:5,title:'موج على الصخور',cat:'photo',artist:'عدسة المحيط',price:0,desc:'صورة قريبة لأمواج تضرب الصخور.'},
+ {id:6,title:'صدى الغابة',cat:'music',artist:'مجموعة الغابة',price:200,dur:'03:40',desc:'مقطوعة مسجلة من أصوات الطبيعة.',mine:true},
+ {id:7,title:'هدوء المد',cat:'music',artist:'مجموعة المحيط',price:0.02,cur:'ETH',dur:'04:05',desc:'مقطوعة هادئة مع إيقاع خفيف.'},
+ {id:8,title:'شروق على الجبل',cat:'video',artist:'استوديو الأفق',price:300,dur:'02:35',desc:'فيلم قصير مُثبت الملكية.',mine:true},
+ {id:9,title:'حقيبة مطرزة',cat:'craft',artist:'ورشة الإبرة',price:190,desc:'تطريز يدوي بخيوط قطنية.'},
+ {id:10,title:'مزهرية فخار',cat:'craft',artist:'ورشة الطين',price:120,desc:'صناعة يدوية مصقولة.'},
+ {id:11,title:'فستان كتان مطرّز',cat:'fashion',artist:'مصممة الأفق',price:450,desc:'تصميم حصري بقماش كتان طبيعي وتطريز يدوي.'},
+ {id:12,title:'حذاء جلد يدوي',cat:'footwear',artist:'ورشة الحرفي',price:380,desc:'حذاء جلد مصنوع يدوياً بخياطة كاملة.'},
+ {id:13,title:'حقيبة جلدية',cat:'accessories',artist:'ورشة الحرفي',price:260,desc:'حقيبة يد جلدية بتصميم كلاسيكي.'},
+ {id:14,title:'قلادة فضية',cat:'jewelry',artist:'مجوهرات النخيل',price:150,desc:'قلادة فضية مصقولة يدوياً.'},
+ {id:15,title:'وسادة مطرّزة',cat:'decor',artist:'ورشة الإبرة',price:90,desc:'وسادة ديكور بتطريز يدوي.'},
+ {id:16,title:'ملصق تصميم رقمي',cat:'graphic',artist:'استوديو الأفق',price:0,desc:'تصميم جرافيك للاستخدام الشخصي.'}
+];
+const state={owned:[3,9],shares:0,links:{},svc:{mypay:false,visa:false,paypal:false,crypto:false},profile:{avatar:''},pub:true,share:true};
+let cat='all', q='', curId=null, wallet=false;
+let up={img:'',vid:'',aud:'',file:null};
+let gallery=[];
+let stageFiles=[];
+
+const CURS={LYD:'د.ل',USD:'$',EUR:'€',SAR:'ر.س',USDT:'USDT',ETH:'ETH',BTC:'BTC'};
+const CUR_DEC={USDT:2,ETH:4,BTC:6};
+const money=(n,cur='LYD')=>{const d=CUR_DEC[cur]||0;const v=Number(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});const s=CURS[cur]||cur;return (cur==='USD'||cur==='EUR')?s+v:v+' '+s;};
+const priceTxt=it=>it.auction?auctionTxt(it):it.price===0?'مجاني':(it.price==null?'بالتفاوض':money(it.price,it.cur||'LYD'));
+function onMode(){const m=$('f_mode').value;$('f_price').disabled=m!=='fixed';if(m!=='fixed')$('f_price').value='';}
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const find=id=>items.find(x=>x.id===id);
+
+function art(i){
+  const [a,b,s]=PAL[i%PAL.length];const gid='g'+i;
+  const shape = s==='circle'?`<circle cx="70%" cy="35%" r="26%" fill="#fff" opacity=".18"/><circle cx="30%" cy="70%" r="18%" fill="${a}" opacity=".5"/>`
+    : s==='rect'?`<rect x="18%" y="22%" width="46%" height="56%" rx="14" fill="#fff" opacity=".15"/><rect x="48%" y="48%" width="34%" height="30%" rx="10" fill="${a}" opacity=".5"/>`
+    : `<path d="M0 62% Q25% 45% 50% 62% T100% 62% L100% 100% L0 100%Z" fill="#fff" opacity=".18"/><path d="M0 75% Q30% 60% 55% 75% T100% 75% L100% 100% L0 100%Z" fill="${a}" opacity=".45"/>`;
+  return `<svg viewBox="0 0 100 100" preserveAspectRatio="none"><defs><linearGradient id="${gid}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><rect width="100" height="100" fill="url(#${gid})"/>${shape}</svg>`;
+}
+function thumb(it){
+  if(it.img) return `<img src="${it.img}" alt="">`;
+  if(it.vid) return `<video src="${it.vid}" muted playsinline preload="metadata"></video><span class="play">▶</span>`;
+  const extra = it.cat==='music' ? '<span class="play">♪</span>' : it.cat==='video' ? '<span class="play">▶</span>' : '';
+  return art(it.id)+extra;
+}
+function card(it){
+  return `<div class="card" onclick="openItem(${it.id})"><div class="art">${thumb(it)}<span class="wm">OZEAN</span><span class="badge">${CAT[it.cat]}</span></div>
+  <div class="meta"><b>${esc(it.title)}</b><small>${esc(it.artist)} <span class="verified">✔</span></small>
+  <div class="row2"><span class="price">${priceTxt(it)}</span>${it.auction?`<span class="timer">${timeLeft(it.auction)}</span>`:(it.dur?`<span class="timer">${it.dur}</span>`:'')}</div></div></div>`;
+}
+
+// ===== الصفحات =====
+function go(id){
+  document.querySelectorAll('main section').forEach(s=>s.classList.toggle('on',s.id===id));
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===id));
+  if(id==='home') renderHome();
+  if(id==='store') renderStore();
+  if(id==='artist') renderArtist();
+  if(id==='profile') renderProfile();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function renderHome(){
+  $('cats').innerHTML=Object.entries(CAT).map(([k,v])=>`<div class="catc" onclick="setCat('${k}',true)"><span>${ICON[k]}</span><b>${v}</b></div>`).join('');
+  $('latest').innerHTML=items.filter(x=>!x.draft).slice(-4).reverse().map(card).join('');
+}
+function setCat(c,goTo){ cat=c; if(goTo) go('store'); else renderStore(); }
+function renderStore(){
+  $('chips').innerHTML=[['all','الكل'],['auction','مزادات'],...Object.entries(CAT)].map(([k,v])=>`<button class="chip ${cat===k?'on':''}" onclick="setCat('${k}')">${v}</button>`).join('');
+  const list=items.filter(x=>!x.draft && (!x.mine||state.pub) && (cat==='all'||(cat==='auction'?!!x.auction:x.cat===cat)) && (!q||(x.title+' '+x.artist+' '+(x.desc||'')+' '+(CAT[x.cat]||'')).toLowerCase().includes(q.toLowerCase())));
+  renderGrid(list);
+  $('empty').style.display=list.length?'none':'block';
+}
+function onSearch(){ q=$('q').value.trim(); go('store'); }
+
+function openItem(id){
+  const _v=find(id); if(_v) _v.views=(_v.views||0)+1;
+  const it=find(id); if(!it) return;
+  curId=id;
+  const media=it.cat==='video'||it.cat==='music';
+  const owned=state.owned.includes(id);
+  $('detailBox').innerHTML=`
+    <div><div class="art">${thumb(it)}<span class="wm">OZEAN</span></div></div>
+    <div>
+      <span class="verified-tag">${CAT[it.cat]}</span>
+      <h1>${esc(it.title)}</h1>
+      <div style="color:var(--mute);font-size:14px">${esc(it.artist)} <span class="verified">✔</span></div>
+      <p class="desc">${esc(it.desc||'')}</p>
+      <div class="notice">${media?`معاينة مجانية ${it.cat==='video'?'10 ثوانٍ':'15 ثانية'} قبل الشراء، والملف الكامل يُسلَّم بعد الدفع.`:'العمل يُعرض بعلامة مائية، والنسخة الأصلية تُسلَّم بعد الشراء.'}</div>
+      <div class="row2" style="border:0;margin:6px 0 16px"><span class="price" style="font-size:22px">${priceTxt(it)}</span>${it.dur?`<span class="timer">${it.dur}</span>`:''}</div>
+      <div class="cta">${owned?'<button class="btn ghost" disabled>تمت الملكية ✔</button>':(it.auction?'':`<button class="btn" onclick="openCheckout(${id})">شراء الآن</button>`)}<button class="btn ghost" onclick="go('store')">رجوع</button></div>
+      <h2 style="margin-top:22px">مشاركة العمل</h2>
+      <div class="sbtns">${shareBtns(id)}</div>
+    </div>`;
+  addOwnerTools(it);
+  addAuctionTools(it);
+  addGallery(it);
+  go('detail');
+}
+
+function renderArtist(){
+  const mine=items.filter(x=>x.mine);
+  $('mywork').innerHTML = mine.length ? mine.map(it=>`<div class="wk"><div class="sw">${thumb(it)}</div><div class="info"><b>${esc(it.title)}</b><small>${priceTxt(it)} · ${CAT[it.cat]}${it.draft?' · مسودة':''}${it.proof?' · موثّق ✔':''}</small></div><div class="sbtns">${shareBtns(it.id)}</div></div>`).join('')
+    : '<p style="color:var(--mute);font-size:14px">لا توجد أعمال بعد. ارفع عملك من تبويب "رفع عمل".</p>';
+  const rows=$('mywork').querySelectorAll('.wk');
+  mine.forEach((it,i)=>{
+    const row=rows[i]; if(!row) return;
+    const btn=document.createElement('button');
+    btn.textContent='حذف';
+    btn.className='btn sm ghost';
+    btn.onclick=()=>deleteWork(it.id);
+    row.querySelector('.sbtns').appendChild(btn);
+    if(it.driveLink){
+      const d=document.createElement('button');
+      d.textContent='تنزيل';
+      d.className='btn sm ghost';
+      d.onclick=()=>window.open(it.driveLink,'_blank','noopener');
+      row.querySelector('.sbtns').appendChild(d);
+    }
+  });
+  $('statW').textContent=mine.length;
+  $('statV').textContent=items.reduce((a,x)=>a+(x.views||0),0);
+  $('statSh').textContent=state.shares||0;
+  renderPosts();
+  $('statS').textContent=state.owned.filter(id=>{const it=find(id);return it&&it.mine;}).length;
+}
+function renderProfile(){
+  $('owned').innerHTML = state.owned.length ? state.owned.map(id=>{const it=find(id);return it?`<div class="own"><div class="sw">${thumb(it)}</div><div style="flex:1"><b>${esc(it.title)}</b><br><small style="color:var(--mute)">${CAT[it.cat]} · شهادة ملكية رقمية</small></div><button class="btn sm ghost" onclick="openItem(${id})">عرض</button></div>`:'';}).join('')
+    : '<p style="color:var(--mute);font-size:14px">لم تشترِ أي عمل بعد.</p>';
+  $('statO').textContent=state.owned.length;
+  renderServices();
+  renderLinks();
+}
+
+// ===== المشاركة =====
+const itemUrl=id=>'https://ozean.app/item/'+id;
+function shareBtns(id){
+  return `${find(id)&&find(id).proof?`<button onclick='showCert(${id})'>الشهادة</button>`:''}<button onclick="shareItem(${id},'wa')">واتساب</button><button onclick="shareItem(${id},'x')">X</button><button onclick="shareItem(${id},'fb')">فيسبوك</button><button onclick="shareItem(${id},'tg')">تيليغرام</button><button onclick="shareItem(${id},'native')">إنستغرام / تيك توك</button><button onclick="copyText('${itemUrl(id)}')">نسخ الرابط</button>`;
+}
+function shareItem(id,net){ const it=find(id); share(net,it.title,itemUrl(id)); }
+function share(net,title,url){
+  if(!state.share){ toast('المشاركة معطّلة من إعدادات الفنان'); return; }
+  track(net,url||LINK,title);
+  url=url||LINK;
+  const u=encodeURIComponent(url), t=encodeURIComponent(title+' · Ozean');
+  const L={wa:`https://wa.me/?text=${t}%20${u}`,x:`https://twitter.com/intent/tweet?text=${t}&url=${u}`,fb:`https://www.facebook.com/sharer/sharer.php?u=${u}`,tg:`https://t.me/share/url?url=${u}&text=${t}`};
+  if(net==='native'){ if(navigator.share) navigator.share({title,url}).catch(()=>{}); else copyText(url); return; }
+  window.open(L[net],'_blank','noopener');
+}
+function copyText(txt){
+  const done=()=>toast('تم نسخ الرابط');
+  if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(done,done); }
+  else { const t=document.createElement('textarea'); t.value=txt; document.body.appendChild(t); t.select(); try{document.execCommand('copy');}catch(e){} t.remove(); done(); }
+}
+let tmr;
+function toast(m){const el=$('toast');el.textContent=m;el.classList.add('on');clearTimeout(tmr);tmr=setTimeout(()=>el.classList.remove('on'),2400);}
+
+// ===== الدفع =====
+function openCheckout(id){
+  const it=find(id); curId=id;
+  $('mt').textContent='شراء: '+it.title;
+  $('mn').textContent=it.title;
+  $('mp').textContent=priceTxt(it);
+  $('mt2').textContent=priceTxt(it);
+  $('modal').classList.add('on');
+}
+function closeM(){ $('modal').classList.remove('on'); }
+function payNow(){
+  if(curId==null) return;
+  if(!state.owned.includes(curId)) state.owned.push(curId);
+  closeM();
+  toast('تمت عملية الشراء، والعمل أُضيف إلى ممتلكاتك');
+  openItem(curId);
+}
+
+// ===== الرفع والعلامة المائية =====
+function watermark(src,cb){
+  const mode=($('f_wm')&&$('f_wm').value)||'light';
+  const im=new Image();
+  im.onload=()=>{
+    const W=im.width,H=im.height,c=document.createElement('canvas');
+    c.width=W;c.height=H;
+    const x=c.getContext('2d');
+    x.drawImage(im,0,0,W,H);
+    if(mode==='light'){
+      const fs=Math.max(14,Math.round(W/14));
+      x.save();x.translate(W/2,H/2);x.rotate(-Math.PI/7);
+      x.font='700 '+fs+'px sans-serif';x.textAlign='center';x.textBaseline='middle';
+      x.fillStyle='rgba(255,255,255,0.14)';
+      const D=Math.hypot(W,H);
+      for(let yy=-D;yy<=D;yy+=fs*4)for(let xx=-D;xx<=D;xx+=fs*9)x.fillText('OZEAN',xx,yy);
+      x.restore();
+    }
+    x.font='700 '+Math.max(12,Math.round(W/40))+'px sans-serif';
+    x.textAlign='right';x.textBaseline='bottom';
+    x.shadowColor='rgba(0,0,0,0.45)';x.shadowBlur=3;
+    x.fillStyle='rgba(255,255,255,0.85)';
+    x.fillText('Ozean',W-12,H-10);
+    cb(c.toDataURL('image/jpeg',0.9));
+  };
+  im.src=src;
+}
+function resetPrev(){
+  up={img:'',vid:'',aud:'',file:null};
+  gallery=[];
+  ['f_img','f_vid','f_aud'].forEach(id=>{const el=$(id);el.style.display='none';el.removeAttribute('src');});
+}
+function onType(){
+  const t=$('f_type').value;
+  $('f_file').accept = t==='music'?'audio/*':t==='video'?'video/*':'image/*';
+  $('f_file').value='';
+  resetPrev();
+}
+async function processGallery(files){
+  const max=4;
+  const list=files.slice(0,max);
+  if(files.length>max) toast('أول '+max+' صور فقط');
+  resetPrev();
+  up.file=list[0];
+  gallery=[];
+  for(const f of list){
+    const src=await new Promise(res=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.readAsDataURL(f); });
+    gallery.push(await new Promise(res=>watermark(src,res)));
+  }
+  up.img=gallery[0];
+  const i=$('f_img'); i.src=up.img; i.style.display='block';
+  toast('تمت إضافة '+gallery.length+' صور للعمل');
+}
+function onFile(e){
+  const tp=$('f_type').value;
+  if(tp!=='music' && tp!=='video' && e.target.files.length>1){ return processGallery(Array.from(e.target.files)); }
+  const f=e.target.files[0]; if(!f) return;
+  resetPrev();
+  const t=$('f_type').value;
+  up.file=f;
+  if(t==='music'){ up.aud=URL.createObjectURL(f); const a=$('f_aud'); a.src=up.aud; a.style.display='block'; }
+  else if(t==='video'){ up.vid=URL.createObjectURL(f); const v=$('f_vid'); v.src=up.vid; v.style.display='block'; }
+  else {
+    const r=new FileReader();
+    r.onload=()=>watermark(r.result,d=>{ up.img=d; const i=$('f_img'); i.src=d; i.style.display='block'; });
+    r.readAsDataURL(f);
+  }
+}
+async function submitWork(){
+  const title=$('f_title').value.trim();
+  const mode=$('f_mode').value; const cur=$('f_cur').value; const price = mode==='fixed'?Number($('f_price').value):(mode==='free'?0:null);
+  const type=$('f_type').value;
+  const pub=$('f_pub').checked;
+  if(!title){ toast('أدخل اسم العمل'); return; }
+  if(mode==='fixed' && !(price>0)){ toast('أدخل سعراً صحيحاً'); return; }
+  let aucObj=null;
+  if($('f_auc').checked){
+    const sp=Number($('f_aucStart').value), st=Number($('f_aucStep').value), en=$('f_aucEnd').value;
+    if(!(sp>0)){ toast('أدخل سعر بداية المزاد'); return; }
+    if(!(st>0)){ toast('أدخل أقل زيادة للمزايدة'); return; }
+    if(!en || new Date(en).getTime() <= Date.now()){ toast('حدد وقت انتهاء في المستقبل'); return; }
+    aucObj={startPrice:sp, minStep:st, endsAt:new Date(en).toISOString(), highBid:null, highBidder:null, highBidderName:null, bids:0, closed:false};
+  }
+  const file = type==='music'?up.aud : type==='video'?up.vid : up.img;
+  if(!file){ toast('ارفع الملف أولاً'); return; }
+  if(window.publishItem && !(window.ozean && window.ozean.user)){ toast('سجّل الدخول بحساب Google لنشر العمل'); return; }
+  let proof=null;
+  if($('f_cert').checked){
+    if(!up.file){ toast('ارفع ملف العمل أولاً لتوثيقه'); return; }
+    try{ proof=await makeProof(up.file); }catch(e){ toast('تعذّر حساب البصمة في هذا المتصفح'); return; }
+  }
+  const id=Date.now();
+  items.push({id,title,cat:type,artist:'فنان Ozean',price,cur,desc:$('f_desc').value.trim()||'—',mine:true,draft:!pub,
+    img:up.img||null,vid:up.vid||null,aud:up.aud||null,dur:'',proof});
+  if(window.publishItem){
+    const it=items[items.length-1];
+    items=items.filter(x=>x!==it);
+    window.publishItem({...it, masterFile: up.file, commissionPercent: Number($('f_pct').value)||10, minFeeUsd: Number($('f_minfee').value)||0.5, driveLink: $('f_drive').value.trim()||null, auction: aucObj, gallery: (gallery.length?gallery:(it.img?[it.img]:[]))})
+      .then(res=>{ if(res&&res.warnings&&res.warnings.length) toast(res.warnings.join(' · ')); return window.loadItems ? window.loadItems() : []; })
+      .then(r=>{ items=items.filter(x=>!x._remote).concat(r.map(x=>({...x,_remote:true}))); window.ozeanSynced=true; updateNet(); go('store'); })
+      .catch(err=>{ items.push(it); toast('تعذّر الحفظ: '+err.message); });
+  }
+  stageFiles=[];$('f_stages').value='';$('stageInfo').textContent='لم تُضف مراحل';
+  if(proof) setTimeout(()=>showCert(id),300);
+  toast(pub?'تم نشر العمل في المتجر':'تم حفظ العمل كمسودة');
+  ['f_title','f_price','f_desc'].forEach(i=>$(i).value='');
+  $('f_file').value='';
+  resetPrev();
+  go(pub?'store':'artist');
+}
+
+// ===== الوضع والمحفظة =====
+function toggleTheme(){
+  const root=document.documentElement;
+  const light=root.dataset.theme!=='light';
+  root.dataset.theme=light?'light':'dark';
+  $('tbtn').textContent=light?'🌙':'☀️';
+}
+function connect(){
+  wallet=!wallet;
+  const b=$('wbtn');
+  b.textContent=wallet?'0x7a…f3e2':'ربط المحفظة';
+  b.classList.toggle('on',wallet);
+  $('addr').textContent=wallet?'0x7a3F9c1B82e0d4A6f5E2c8B19D03aF7bE4f3e2':'لم يتم ربط محفظة';
+}
+
+function onStages(e){ stageFiles=Array.from(e.target.files||[]); $('stageInfo').textContent=stageFiles.length?'عدد المراحل: '+stageFiles.length:'لم تُضف مراحل'; }
+async function sha256Hex(blob){
+  if(!(window.crypto&&crypto.subtle)) throw new Error('no-subtle');
+  const buf=await blob.arrayBuffer();
+  const h=await crypto.subtle.digest('SHA-256',buf);
+  return [...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+async function makeProof(file){
+  const now=new Date();
+  const sha=await sha256Hex(file);
+  const stages=[];
+  for(const s of stageFiles){ stages.push({name:s.name,type:s.type,size:s.size,sha256:await sha256Hex(s)}); }
+  const certId='OC-'+now.getTime().toString(36).toUpperCase()+'-'+sha.slice(0,6).toUpperCase();
+  return {certId,sha256:sha,fileName:file.name,fileSize:file.size,createdAt:now.toISOString(),stages,anchor:'pending'};
+}
+function showCert(id){
+  const it=find(id); const p=it&&it.proof; if(!p) return;
+  const when=new Date(p.createdAt).toLocaleString('ar-LY');
+  const stagesHtml=p.stages.length ? p.stages.map((s,i)=>`<div style='margin:4px 0;font-size:11px;word-break:break-all'><b>${i+1}. ${esc(s.name)}</b><br><span style='font-family:monospace'>${s.sha256}</span></div>`).join('') : `<div style='font-size:12px'>لا توجد مراحل مسجلة</div>`;
+  $('certBox').innerHTML=`<div id='certPrint' style='border:3px double #0b3a5b;padding:24px;background:#fff;color:#0f172a;direction:rtl;border-radius:12px'>
+    <div style='text-align:center;margin-bottom:14px'><div style='font-size:12px;color:#0b3a5b;letter-spacing:2px'>OZEAN · صنع بحب</div><h2 style='font-size:20px;margin:6px 0'>شهادة توثيق عمل فني</h2></div>
+    <table style='width:100%;border-collapse:collapse;font-size:13px'>
+      <tr><td style='padding:6px;color:#64748b;width:32%'>رقم الشهادة</td><td style='padding:6px;font-weight:700'>${p.certId}</td></tr>
+      <tr><td style='padding:6px;color:#64748b'>اسم العمل</td><td style='padding:6px'>${esc(it.title)}</td></tr>
+      <tr><td style='padding:6px;color:#64748b'>الفنان</td><td style='padding:6px'>${esc(it.artist)}</td></tr>
+      <tr><td style='padding:6px;color:#64748b'>النوع</td><td style='padding:6px'>${CAT[it.cat]}</td></tr>
+      <tr><td style='padding:6px;color:#64748b'>تاريخ التوثيق</td><td style='padding:6px'>${when}</td></tr>
+      <tr><td style='padding:6px;color:#64748b'>اسم الملف الأصلي</td><td style='padding:6px'>${esc(p.fileName)}</td></tr>
+    </table>
+    <div style='margin-top:12px;font-size:12px;color:#64748b'>بصمة الملف (SHA-256)</div>
+    <div style='font-family:monospace;font-size:11px;word-break:break-all;background:#f1f5f9;padding:8px;border-radius:8px;margin-top:4px'>${p.sha256}</div>
+    <div style='margin-top:12px;font-size:12px;color:#64748b'>مراحل العمل</div>
+    ${stagesHtml}
+    <div style='margin-top:12px;font-size:12px;color:#64748b'>حالة التثبيت على سلسلة عامة</div>
+    <div style='font-size:12px'>قيد التثبيت. ستُسجَّل البصمة لاحقاً على سلسلة بيتكوين عبر OpenTimestamps.</div>
+    <div style='margin-top:12px;font-size:11px;color:#64748b'>للتحقق: ارفع الملف في قسم "التحقق من ملكية ملف" داخل تبويب رفع عمل.</div>
+  </div>`;
+  $('certModal').classList.add('on');
+}
+function closeCert(){ $('certModal').classList.remove('on'); }
+function printCert(){ try{ window.print(); }catch(e){ downloadCert(); } }
+async function verifyFile(e){
+  const f=e.target.files[0]; if(!f) return;
+  const out=$('verifyRes'); out.textContent='جارٍ حساب البصمة...';
+  try{
+    const h=await sha256Hex(f);
+    let hit=null;
+    for(const it of items){
+      if(!it.proof) continue;
+      if(it.proof.sha256===h){ hit={it,stage:null}; break; }
+      const st=it.proof.stages.find(s=>s.sha256===h);
+      if(st){ hit={it,stage:st}; break; }
+    }
+    out.innerHTML = hit
+      ? `<span style='color:#16a34a;font-weight:700'>✔ مطابق لعمل موثّق</span><br>العمل: ${esc(hit.it.title)}<br>رقم الشهادة: <b>${hit.it.proof.certId}</b><br>تاريخ التوثيق: ${new Date(hit.it.proof.createdAt).toLocaleString('ar-LY')}${hit.stage?'<br>المطابق: مرحلة من مراحل العمل':''}`
+      : `<span style='color:#dc2626;font-weight:700'>✖ لا يطابق أي عمل موثّق في المنصة</span>`;
+  }catch(err){ out.textContent='تعذّر حساب البصمة في هذا المتصفح'; }
+}
+function track(net,url,title){
+  const k=url||LINK;
+  const L=state.links[k]||(state.links[k]={title:title||'عمل',counts:{}});
+  L.counts[net]=(L.counts[net]||0)+1;
+  state.shares=(state.shares||0)+1;
+}
+let gridList=[], gridPage=1, io=null;
+const PAGE=8;
+function renderGrid(list){
+  gridList=list; gridPage=1;
+  $('store-grid').innerHTML=list.slice(0,PAGE).map(card).join('');
+  if(io) io.disconnect();
+  if('IntersectionObserver' in window){
+    io=new IntersectionObserver(es=>{
+      if(es[0].isIntersecting && gridPage*PAGE<gridList.length){
+        gridPage++;
+        $('store-grid').innerHTML=gridList.slice(0,gridPage*PAGE).map(card).join('');
+      }
+    },{rootMargin:'300px'});
+    io.observe($('sentinel'));
+  }
+}
+let postTexts=[];
+function renderPosts(){
+  const last=items.filter(x=>x.mine&&!x.draft).slice(-1)[0];
+  if(!last){ $('posts').innerHTML="<p style='color:var(--mute);font-size:13px'>انشر عملاً لتظهر المنشورات الجاهزة.</p>"; return; }
+  const u=itemUrl(last.id), d=last.desc||'';
+  postTexts=[
+    `تعال شوف أحدث عمل عندي على Ozean: ${last.title} ${u}`,
+    `🎨 ${last.title}\n${d}\n🔗 ${u}\n#Ozean #فن #صنع_بحب`,
+    `${last.title} | عمل جديد ✨ #Ozean #art #libya`,
+    `${last.title} — ${u}`
+  ];
+  const names=['واتساب','إنستغرام','تيك توك','X / فيسبوك'];
+  $('posts').innerHTML=names.map((n,i)=>`<div class='box' style='padding:12px;margin-bottom:8px'><b style='font-size:14px'>${n}</b><p style='font-size:13px;color:var(--mute);margin:6px 0;white-space:pre-line'>${esc(postTexts[i])}</p><button class='btn sm' onclick='copyPost(${i})'>نسخ المنشور</button></div>`).join('');
+}
+function copyPost(i){ copyText(postTexts[i]); }
+const NET={wa:'واتساب',x:'X',fb:'فيسبوك',tg:'تيليغرام',native:'إنستغرام / تيك توك'};
+const SVC=[['mypay','ماي باي (MyPay LY)','دفع محلي عبر حسابك المصرفي أو المحفظة'],['visa','بطاقات Visa وMastercard','دفع عبر بوابة دفع مرخصة'],['paypal','PayPal','دفع دولي'],['crypto','محفظة عملات رقمية','استلام USDT وETH وBTC']];
+function renderServices(){
+  $('services').innerHTML=SVC.map(([k,n,d])=>`<div class='own'><div style='flex:1'><b>${n}</b><br><small style='color:var(--mute)'>${d}</small></div><button class='btn sm ${state.svc[k]?'':'ghost'}' onclick="toggleSvc('${k}')">${state.svc[k]?'متصل ✔':'ربط'}</button></div>`).join('');
+}
+function toggleSvc(k){
+  state.svc[k]=!state.svc[k];
+  renderServices();
+  toast(state.svc[k]?'تم تسجيل الربط. التفعيل الفعلي يتطلب اتفاقية مع المزوّد':'تم إلغاء الربط');
+}
+function renderLinks(){
+  const ks=Object.keys(state.links);
+  $('linksBox').innerHTML = ks.length ? ks.map(k=>{const L=state.links[k];const tot=Object.values(L.counts).reduce((a,b)=>a+b,0);const det=Object.entries(L.counts).map(([n,c])=>`${NET[n]||n}: ${c}`).join(' · ');return `<div class='kv' style='flex-direction:column;align-items:flex-start;gap:4px'><b>${esc(L.title)}</b><small style='color:var(--mute);word-break:break-all'>${esc(k)}</small><span style='font-size:13px'>المشاركات: ${tot}<br>${det}</span></div>`;}).join('') : `<p style='color:var(--mute);font-size:13px'>لا توجد روابط مشاركة بعد. عند مشاركة أي عمل تظهر هنا تفاصيل كل منصة.</p>`;
+}
+function pickAvatar(){ $('avatarFile').click(); }
+function onAvatar(e){
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{ state.profile.avatar=r.result; $('avatarBox').innerHTML=`<img src='${r.result}' alt='' style='width:100%;height:100%;object-fit:cover;border-radius:50%'>`; toast('تم تحديث صورتك'); };
+  r.readAsDataURL(f);
+}
+function openStatus(){
+  const on=navigator.onLine;
+  const drafts=items.filter(x=>x.draft).length;
+  const rows=[
+    ['الاتصال بالإنترنت', on?'متصل':'غير متصل'],
+    ['وضع الحفظ',(window.ozeanSynced?'متزامن مع Firebase':'محلي (داخل هذه الجلسة فقط)')],
+    ['المزامنة مع الخادم',(window.ozeanSynced?'مرتبطة ومتزامنة':'غير مربوطة بعد (Firebase لم يُربط)')],
+    ['الأعمال في هذه الجلسة', items.length],
+    ['المسودات غير المنشورة', drafts],
+    ['المشاركات المسجّلة', state.shares||0],
+    ['آخر فحص', new Date().toLocaleTimeString('ar-LY')]
+  ];
+  $('stBox').innerHTML=rows.map(([a,b])=>`<div class='kv'><span>${a}</span><span>${b}</span></div>`).join('')+`<p style='font-size:12px;color:var(--mute);margin-top:10px;line-height:1.7'>وضع "محلي" يعني أن البيانات لا تُحفظ خارج هذا المتصفح. عند ربط Firebase تظهر هنا حالة "متزامن" مع عدد الأعمال المحفوظة على الخادم.</p>`;
+  $('statusModal').classList.add('on');
+}
+function closeStatus(){ $('statusModal').classList.remove('on'); }
+function updateNet(){
+  const b=$('sbtn'); if(!b) return;
+  const on=navigator.onLine;
+  b.textContent=(on?'● متصل':'● غير متصل')+' · '+(window.ozeanSynced?'متزامن':'محلي');
+  b.style.color=on?'#16a34a':'#dc2626';
+}
+window.addEventListener('online',updateNet);
+window.addEventListener('offline',updateNet);
+function downloadCert(){
+  const el=$('certPrint');
+  if(!el){ toast('افتح الشهادة أولاً'); return; }
+  const html='<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>شهادة توثيق</title></head><body style="font-family:Segoe UI,Tahoma,sans-serif;padding:24px">'+el.outerHTML+'</body></html>';
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([html],{type:'text/html;charset=utf-8'}));
+  a.download='ozean-certificate.html';
+  document.body.appendChild(a); a.click(); a.remove();
+  toast('تم تنزيل الشهادة');
+}
+updateNet();
+document.addEventListener('contextmenu',e=>{ if(!e.target.closest('input,textarea')) e.preventDefault(); });
+document.addEventListener('copy',e=>{ if(!e.target.closest('input,textarea')) e.preventDefault(); });
+go('home');
+</script>
+<script type="module" src="firebase-bridge.js"></script>
+<script>
+function authToggle(){
+  if(window.ozean && window.ozean.user){ window.signOutUser(); }
+  else if(window.signIn){ window.signIn(); }
+  else { toast('الاتصال بالخدمة غير جاهز بعد'); }
+}
+async function deleteWork(id){
+  const it=find(id); if(!it) return;
+  if(!confirm('حذف العمل "'+it.title+'"؟ لا يمكن التراجع عن ذلك.')) return;
+  try{
+    if(it._docId && window.deleteItem) await window.deleteItem(it._docId);
+    items=items.filter(x=>x!==it);
+    toast('تم حذف العمل');
+    renderArtist(); renderStore();
+    if(currentSection()==='detail') go('store');
+  }catch(e){ toast('تعذّر الحذف: '+e.message); }
+}
+function savePhone(v){
+  if(!window.saveProfile) return;
+  const phone=(v||'').trim();
+  if(phone && !/^\+?[0-9\s-]{7,20}$/.test(phone)){ toast('صيغة الرقم غير صحيحة، استخدم مفتاح الدولة مثل +218'); return; }
+  window.saveProfile({phone:phone||null, phonePrivacy:$('pPrivacy').value})
+    .then(()=>toast('تم حفظ إعدادات الهاتف'))
+    .catch(e=>toast('تعذّر الحفظ: '+e.message));
+}
+function logoutUI(){
+  if(window.signOutUser) window.signOutUser();
+  toast('تم تسجيل الخروج');
+}
+async function deleteAccountUI(){
+  if(!(window.ozean && window.ozean.user)){ toast('لا يوجد حساب مسجّل'); return; }
+  if(!confirm('حذف حسابك وكل أعمالك نهائياً؟ لا يمكن التراجع عن ذلك.')) return;
+  try{
+    await window.deleteAccount();
+    items=items.filter(x=>!x._remote);
+    toast('تم حذف الحساب');
+    go('home');
+  }catch(e){
+    toast(e.code==='auth/requires-recent-login' ? 'سجّل الخروج ثم الدخول مرة أخرى وأعد المحاولة' : 'تعذّر حذف الحساب: '+e.message);
+  }
+}
+function addOwnerTools(it){
+  const box=$('detailBox'); if(!box||!it._docId) return;
+  const isAdmin=!!(window.ozean&&window.ozean.user&&window.ozean.user.email==='tecnexus555@gmail.com');
+  if(!it.mine && !isAdmin) return;
+  const bar=document.createElement('div'); bar.className='cta'; bar.style.marginTop='14px';
+  if(it.driveLink){
+    const d=document.createElement('button'); d.className='btn ghost'; d.textContent='تنزيل الملف الأصلي';
+    d.onclick=()=>window.open(it.driveLink,'_blank','noopener'); bar.appendChild(d);
+  }
+  const del=document.createElement('button'); del.className='btn ghost'; del.style.color='#dc2626'; del.textContent='حذف العمل';
+  del.onclick=()=>deleteWork(it.id); bar.appendChild(del);
+  box.appendChild(bar);
+}
+function auctionTxt(it){
+  const a=it.auction, cur=it.cur||'LYD';
+  const v=a.highBid!=null?a.highBid:a.startPrice;
+  return (a.closed?'مغلق · ':'مزاد · ')+money(v,cur);
+}
+function timeLeft(a){
+  const ms=(a.endsAt||0)-Date.now();
+  if(a.closed||ms<=0) return 'انتهى';
+  const h=Math.floor(ms/3600000), d=Math.floor(h/24);
+  return d>0 ? 'ينتهي بعد '+d+' يوم' : 'ينتهي بعد '+h+' ساعة';
+}
+function addAuctionTools(it){
+  if(!it.auction || !it._docId) return;
+  const box=$('detailBox'); if(!box) return;
+  const a=it.auction, cur=it.cur||'LYD';
+  const isOwner=!!it.mine;
+  const isAdmin=!!(window.ozean&&window.ozean.user&&window.ozean.user.email==='tecnexus555@gmail.com');
+  const top=a.highBid!=null?a.highBid:a.startPrice;
+  const min=a.highBid!=null?a.highBid+a.minStep:a.startPrice;
+  const info=document.createElement('div'); info.className='notice'; info.style.marginTop='14px';
+  info.innerHTML=`<b style='color:var(--txt)'>المزاد</b><br>أعلى مزايدة: ${money(top,cur)} · أقل مزايدة: ${money(min,cur)}<br>عدد المزايدات: ${a.bids||0} · ${timeLeft(a)}${a.highBidderName?'<br>صاحب أعلى مزايدة: '+esc(a.highBidderName):''}`;
+  box.appendChild(info);
+  const ended=a.closed||(a.endsAt||0)<=Date.now();
+  if(!ended && !isOwner){
+    const row=document.createElement('div'); row.className='cta';
+    const inp=document.createElement('input'); inp.type='number'; inp.min=min; inp.step='any'; inp.placeholder=String(min);
+    inp.style.cssText='background:var(--bg2);border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:10px;width:160px';
+    const btn=document.createElement('button'); btn.className='btn'; btn.textContent='زايد';
+    btn.onclick=()=>placeBidUI(it.id, Number(inp.value));
+    row.appendChild(inp); row.appendChild(btn); box.appendChild(row);
+  }
+  if(!a.closed && (isOwner||isAdmin)){
+    const row=document.createElement('div'); row.className='cta';
+    const c=document.createElement('button'); c.className='btn ghost'; c.textContent='إغلاق المزاد وتحديد الفائز';
+    c.onclick=()=>closeAuctionUI(it.id); row.appendChild(c); box.appendChild(row);
+  }
+}
+async function reloadRemote(){
+  if(!window.loadItems) return;
+  const r=await window.loadItems();
+  items=items.filter(x=>!x._remote).concat(r.map(x=>({...x,_remote:true})));
+}
+async function placeBidUI(id, amount){
+  const it=find(id); if(!it) return;
+  if(!(window.ozean&&window.ozean.user)){ toast('سجّل الدخول للمزايدة'); return; }
+  if(it.mine){ toast('لا يمكنك المزايدة على عملك'); return; }
+  try{
+    await window.placeBid(it._docId, amount);
+    toast('تمت المزايدة');
+    await reloadRemote(); openItem(id);
+  }catch(e){ toast(e.message||'تعذّرت المزايدة'); }
+}
+async function closeAuctionUI(id){
+  const it=find(id); if(!it) return;
+  if(!confirm('إغلاق المزاد الآن؟ سيُعتمد أعلى مزايد فائزاً.')) return;
+  try{
+    await window.closeAuction(it._docId);
+    toast('تم إغلاق المزاد');
+    await reloadRemote(); openItem(id);
+  }catch(e){ toast('تعذّر الإغلاق: '+e.message); }
+}
+function addGallery(it){
+  const g=it.gallery||[]; if(g.length<2) return;
+  const box=$('detailBox'); if(!box||!box.firstElementChild) return;
+  const strip=document.createElement('div');
+  strip.style.cssText='display:flex;gap:8px;margin-top:10px;overflow-x:auto';
+  g.forEach(src=>{
+    const im=document.createElement('img'); im.src=src; im.alt='';
+    im.style.cssText='width:64px;height:64px;object-fit:cover;border-radius:10px;cursor:pointer;border:1px solid var(--line);flex:0 0 auto';
+    im.onclick=()=>{ const main=box.querySelector('.art img'); if(main) main.src=src; };
+    strip.appendChild(im);
+  });
+  box.firstElementChild.appendChild(strip);
+}
+function currentSection(){ const s=document.querySelector('main section.on'); return s?s.id:'home'; }
+window.addEventListener('ozean-auth', async (e)=>{
+  const u=e.detail;
+  if(!u) window.ozeanSynced=false;
+  if(u){
+    state.owned=[];
+    if(window.loadProfile) window.loadProfile().then(p=>{ if(p&&p.phone) $('pPhone').value=p.phone; if(p&&p.phonePrivacy) $('pPrivacy').value=p.phonePrivacy; }).catch(()=>{});
+    $('pEmail').textContent=u.email||'—';
+    $('pName').textContent=u.displayName||'حسابي';
+    if(u.photoURL && !state.profile.avatar){
+      $('avatarBox').innerHTML=`<img src='${u.photoURL}' alt='' style='width:100%;height:100%;object-fit:cover;border-radius:50%'>`;
+    }
+  } else {
+    $('pEmail').textContent='غير مسجّل';
+    $('pName').textContent='حسابي';
+  }
+  const b=$('wbtn');
+  b.textContent = u ? (u.displayName||'حسابي') : 'تسجيل الدخول';
+  b.classList.toggle('on', !!u);
+  if(window.loadItems){
+    try{
+      const remote=await window.loadItems();
+      items=items.filter(x=>!x._remote).concat(remote.map(r=>({...r,_remote:true})));
+      window.ozeanSynced=true; updateNet();
+    }catch(err){ console.error(err); toast('تعذّر تحميل الأعمال من الخادم'); window.ozeanSynced=false; updateNet(); }
+  }
+  go(currentSection());
 });
-const showAll=document.getElementById('show-all');
-showAll.addEventListener('click',()=>{document.querySelectorAll('.cat-card-app').forEach(item=>item.style.background='');showToast('تظهر جميع التصنيفات')});
-showAll.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();showAll.click()}});
-document.querySelectorAll('.nav-link-app').forEach(link=>link.addEventListener('click',event=>{event.preventDefault();document.querySelectorAll('.nav-link-app').forEach(item=>item.classList.remove('active'));link.classList.add('active');const destination=link.dataset.nav;showToast(destination==='الرئيسية'?'أهلاً بك في Ozean':'قسم '+destination+' قيد التجهيز')}));
 </script>
 </body>
 </html>
