@@ -80,7 +80,7 @@ h2:first-child{margin-top:0}
 .desc{color:var(--mute);line-height:1.8;margin:12px 0;font-size:14px}
 .notice{background:var(--bg2);border:1px dashed var(--line);border-radius:12px;padding:10px 12px;font-size:13px;color:var(--mute);margin:10px 0}
 .verified-tag{display:inline-block;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:12px}
-@media(max-width:760px){.pf,.detail{grid-template-columns:1fr!important}.stats{grid-template-columns:repeat(2,1fr)}.hero h1{font-size:22px}.search{display:none}}
+@media(max-width:760px){.pf,.detail{grid-template-columns:1fr!important}.stats{grid-template-columns:repeat(2,1fr)}.hero h1{font-size:22px}.top{flex-wrap:wrap}.search{display:flex;max-width:none;order:3;width:100%;flex-basis:100%}}
 .box{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--sh)}
 .avatar{width:84px;height:84px;border-radius:50%;background:var(--grad);margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:30px;color:#06121a;font-weight:800}
 .kv{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line);font-size:14px;gap:10px}
@@ -256,6 +256,7 @@ footer a{color:var(--cyan)}
       <video id="f_vid" class="prev" controls muted playsinline></video>
       <audio id="f_aud" class="prev" controls></audio>
     </div>
+    <div class="fld"><label>شكل العلامة المائية</label><select id="f_wm"><option value="light">خفيفة ومتباعدة (افتراضي)</option><option value="corner">زاوية فقط (لا تشوّه العمل)</option></select></div>
     <div class="fld"><label>اسم العمل</label><input id="f_title" placeholder="مثال: غروب الواحة"></div>
     <div class="fld"><label>طريقة التسعير</label><select id="f_mode" onchange="onMode()"><option value="fixed">سعر ثابت</option><option value="free">مجاني</option><option value="nego">بالتفاوض / عند الطلب</option></select></div>
     <div class="fld"><label>العملة والسعر</label><div style="display:flex;gap:8px"><select id="f_cur" style="flex:0 0 170px"><option value="LYD">دينار ليبي (د.ل)</option><option value="USD">دولار ($)</option><option value="EUR">يورو (€)</option><option value="SAR">ريال سعودي (ر.س)</option><option value="USDT">USDT (عملة مستقرة)</option><option value="ETH">إيثيريوم (ETH)</option><option value="BTC">بيتكوين (BTC)</option></select><input id="f_price" type="number" min="0" step="any" placeholder="مثال: 800" style="flex:1;min-width:0"></div></div>
@@ -405,7 +406,7 @@ function renderHome(){
 function setCat(c,goTo){ cat=c; if(goTo) go('store'); else renderStore(); }
 function renderStore(){
   $('chips').innerHTML=[['all','الكل'],...Object.entries(CAT)].map(([k,v])=>`<button class="chip ${cat===k?'on':''}" onclick="setCat('${k}')">${v}</button>`).join('');
-  const list=items.filter(x=>!x.draft && (!x.mine||state.pub) && (cat==='all'||x.cat===cat) && (!q||(x.title+' '+x.artist).includes(q)));
+  const list=items.filter(x=>!x.draft && (!x.mine||state.pub) && (cat==='all'||x.cat===cat) && (!q||(x.title+' '+x.artist+' '+(x.desc||'')+' '+(CAT[x.cat]||'')).toLowerCase().includes(q.toLowerCase())));
   renderGrid(list);
   $('empty').style.display=list.length?'none':'block';
 }
@@ -430,6 +431,7 @@ function openItem(id){
       <h2 style="margin-top:22px">مشاركة العمل</h2>
       <div class="sbtns">${shareBtns(id)}</div>
     </div>`;
+  addOwnerTools(it);
   go('detail');
 }
 
@@ -445,6 +447,13 @@ function renderArtist(){
     btn.className='btn sm ghost';
     btn.onclick=()=>deleteWork(it.id);
     row.querySelector('.sbtns').appendChild(btn);
+    if(it.driveLink){
+      const d=document.createElement('button');
+      d.textContent='تنزيل';
+      d.className='btn sm ghost';
+      d.onclick=()=>window.open(it.driveLink,'_blank','noopener');
+      row.querySelector('.sbtns').appendChild(d);
+    }
   });
   $('statW').textContent=mine.length;
   $('statV').textContent=items.reduce((a,x)=>a+(x.views||0),0);
@@ -503,21 +512,27 @@ function payNow(){
 
 // ===== الرفع والعلامة المائية =====
 function watermark(src,cb){
+  const mode=($('f_wm')&&$('f_wm').value)||'light';
   const im=new Image();
   im.onload=()=>{
     const W=im.width,H=im.height,c=document.createElement('canvas');
     c.width=W;c.height=H;
     const x=c.getContext('2d');
     x.drawImage(im,0,0,W,H);
-    const fs=Math.max(16,Math.round(W/9));
-    x.save();x.translate(W/2,H/2);x.rotate(-Math.PI/7);
-    x.font='800 '+fs+'px sans-serif';x.textAlign='center';x.textBaseline='middle';
-    x.fillStyle='rgba(255,255,255,0.3)';x.shadowColor='rgba(0,0,0,0.35)';x.shadowBlur=4;
-    const D=Math.hypot(W,H);
-    for(let yy=-D;yy<=D;yy+=fs*2.6)for(let xx=-D;xx<=D;xx+=fs*5.5)x.fillText('OZEAN',xx,yy);
-    x.restore();x.shadowBlur=0;
-    x.font='700 '+Math.max(14,Math.round(W/36))+'px sans-serif';x.textAlign='right';x.textBaseline='bottom';
-    x.fillStyle='rgba(255,255,255,0.85)';x.fillText('Ozean ❤',W-14,H-12);
+    if(mode==='light'){
+      const fs=Math.max(14,Math.round(W/14));
+      x.save();x.translate(W/2,H/2);x.rotate(-Math.PI/7);
+      x.font='700 '+fs+'px sans-serif';x.textAlign='center';x.textBaseline='middle';
+      x.fillStyle='rgba(255,255,255,0.14)';
+      const D=Math.hypot(W,H);
+      for(let yy=-D;yy<=D;yy+=fs*4)for(let xx=-D;xx<=D;xx+=fs*9)x.fillText('OZEAN',xx,yy);
+      x.restore();
+    }
+    x.font='700 '+Math.max(12,Math.round(W/40))+'px sans-serif';
+    x.textAlign='right';x.textBaseline='bottom';
+    x.shadowColor='rgba(0,0,0,0.45)';x.shadowBlur=3;
+    x.fillStyle='rgba(255,255,255,0.85)';
+    x.fillText('Ozean',W-12,H-10);
     cb(c.toDataURL('image/jpeg',0.9));
   };
   im.src=src;
@@ -765,6 +780,7 @@ async function deleteWork(id){
     items=items.filter(x=>x!==it);
     toast('تم حذف العمل');
     renderArtist(); renderStore();
+    if(currentSection()==='detail') go('store');
   }catch(e){ toast('تعذّر الحذف: '+e.message); }
 }
 function savePhone(v){
@@ -790,6 +806,19 @@ async function deleteAccountUI(){
   }catch(e){
     toast(e.code==='auth/requires-recent-login' ? 'سجّل الخروج ثم الدخول مرة أخرى وأعد المحاولة' : 'تعذّر حذف الحساب: '+e.message);
   }
+}
+function addOwnerTools(it){
+  const box=$('detailBox'); if(!box||!it._docId) return;
+  const isAdmin=!!(window.ozean&&window.ozean.user&&window.ozean.user.email==='tecnexus555@gmail.com');
+  if(!it.mine && !isAdmin) return;
+  const bar=document.createElement('div'); bar.className='cta'; bar.style.marginTop='14px';
+  if(it.driveLink){
+    const d=document.createElement('button'); d.className='btn ghost'; d.textContent='تنزيل الملف الأصلي';
+    d.onclick=()=>window.open(it.driveLink,'_blank','noopener'); bar.appendChild(d);
+  }
+  const del=document.createElement('button'); del.className='btn ghost'; del.style.color='#dc2626'; del.textContent='حذف العمل';
+  del.onclick=()=>deleteWork(it.id); bar.appendChild(del);
+  box.appendChild(bar);
 }
 function currentSection(){ const s=document.querySelector('main section.on'); return s?s.id:'home'; }
 window.addEventListener('ozean-auth', async (e)=>{

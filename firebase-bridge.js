@@ -56,6 +56,7 @@ function mapItem(d) {
   return { id: x.numId, _docId: d.id, title: x.title, desc: x.description, cat: x.category,
            price: x.pricingMode === "free" ? 0 : (x.pricingMode === "nego" ? null : x.price),
            cur: x.currency, artist: x.artist, img: x.previewData || x.previewUrl || null,
+           driveLink: x.driveLink || null,
            dur: x.duration || "", mine: x.artistId === window.ozean.user?.uid,
            draft: !x.isPublished };
 }
