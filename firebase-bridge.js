@@ -58,11 +58,21 @@ function mapItem(d) {
            cur: x.currency, artist: x.artist, img: x.previewData || x.previewUrl || null,
            gallery: x.gallery || (x.previewData ? [x.previewData] : []),
            ownerUid: x.artistId,
+           artistRole: x.artistRole || "", artistRoleOther: x.artistRoleOther || "",
            driveLink: (x.artistId === window.ozean.user?.uid ? x.driveLink : null) || null,
            auction: x.auction ? { ...x.auction, endsAt: x.auction.endsAt && x.auction.endsAt.toMillis ? x.auction.endsAt.toMillis() : 0 } : null,
            dur: x.duration || "", mine: x.artistId === window.ozean.user?.uid,
            draft: !x.isPublished };
 }
+
+// يحدّث نوع الفنان في كل أعماله المنشورة سابقاً ليظهر للزوار
+window.syncItemsRole = async (role, other) => {
+  const u = window.ozean.user; if (!u) return;
+  const snap = await getDocs(query(collection(db, "items"), where("artistId", "==", u.uid)));
+  await Promise.all(snap.docs
+    .filter(d => (d.data().artistRole || null) !== role || (d.data().artistRoleOther || null) !== other)
+    .map(d => updateDoc(doc(db, "items", d.id), { artistRole: role, artistRoleOther: other })));
+};
 
 window.loadItems = async () => {
   const out = [];
@@ -115,6 +125,7 @@ window.publishItem = async (item) => {
     pricingMode: item.auction ? "auction" : (item.price === 0 ? "free" : (item.price == null ? "nego" : "fixed")),
     price: item.auction ? Number(item.auction.startPrice) : (item.price ?? null), currency: item.cur || "LYD",
     artist: user.displayName || "فنان", artistId: uid,
+    artistRole: item.artistRole || null, artistRoleOther: item.artistRoleOther || null,
     isPublished: !item.draft, createdAt: serverTimestamp(),
     commissionPercent: item.commissionPercent ?? 10, minFeeUsd: item.minFeeUsd ?? 0.5,
     previewData,
