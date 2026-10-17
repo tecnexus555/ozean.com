@@ -5,7 +5,7 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChang
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, updateDoc, getDocs, collection, query, where, addDoc, deleteDoc, serverTimestamp, runTransaction, Timestamp }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL }
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
 // الصق إعدادات مشروعك من: Project settings ← Your apps ← Web app
@@ -57,7 +57,8 @@ function mapItem(d) {
            price: x.pricingMode === "free" ? 0 : (x.pricingMode === "nego" ? null : x.price),
            cur: x.currency, artist: x.artist, img: x.previewData || x.previewUrl || null,
            gallery: x.gallery || (x.previewData ? [x.previewData] : []),
-           driveLink: x.driveLink || null,
+           ownerUid: x.artistId,
+           driveLink: (x.artistId === window.ozean.user?.uid ? x.driveLink : null) || null,
            auction: x.auction ? { ...x.auction, endsAt: x.auction.endsAt && x.auction.endsAt.toMillis ? x.auction.endsAt.toMillis() : 0 } : null,
            dur: x.duration || "", mine: x.artistId === window.ozean.user?.uid,
            draft: !x.isPublished };
@@ -71,6 +72,13 @@ window.loadItems = async () => {
     const mine = await getDocs(query(collection(db, "items"), where("artistId", "==", window.ozean.user.uid)));
     mine.forEach(d => { if (!out.find(x => x._docId === d.id)) out.push(mapItem(d)); });
   }
+  // رابط الملف الأصلي محفوظ في وثيقة خاصة، ويُحمَّل لصاحب العمل فقط
+  await Promise.all(out.filter(x => x.mine && x._docId).map(async x => {
+    try {
+      const s = await getDoc(doc(db, "items", x._docId, "private", "master"));
+      if (s.exists() && s.data().driveLink) x.driveLink = s.data().driveLink;
+    } catch (e) {}
+  }));
   return out;
 };
 
@@ -111,30 +119,51 @@ window.publishItem = async (item) => {
     commissionPercent: item.commissionPercent ?? 10, minFeeUsd: item.minFeeUsd ?? 0.5,
     previewData,
     gallery: galleryData,
-    driveLink: item.driveLink || null,
     auction: item.auction ? { ...item.auction, startPrice: Number(item.auction.startPrice), minStep: Number(item.auction.minStep), endsAt: Timestamp.fromDate(new Date(item.auction.endsAt)) } : null
   });
   const warnings = [];
-  // الملف الأصلي: إن وُضع رابط Drive فلا يُرفع شيء، وإلا يُحفظ في Storage إن كان مفعّلاً
+  // الملف الأصلي وروابطه تُحفظ في وثيقة خاصة لا يقرؤها إلا صاحب العمل أو مشترٍ أكّد الفنان دفعه
+  const masterRef = doc(db, "items", docRef.id, "private", "master");
+  if (item.driveLink) await setDoc(masterRef, { driveLink: item.driveLink });
   if (item.masterFile && !item.driveLink) {
     try {
-      await uploadBytes(ref(storage, `masters/${uid}/${item.id}/${item.masterFile.name}`), item.masterFile);
+      const path = `masters/${uid}/${docRef.id}/${item.masterFile.name}`;
+      await uploadBytes(ref(storage, path), item.masterFile);
+      await setDoc(masterRef, { masterPath: path });
     } catch (e) {
       console.error(e);
-      warnings.push("الملف الأصلي لم يُحفظ لأن التخزين غير مفعّل بعد");
+      warnings.push("الملف الأصلي لم يُحفظ، تحقق من تفعيل التخزين (Storage)");
     }
   }
   return { id: docRef.id, warnings };
 };
 
+const PAY_KEYS = ["pw_type","pw_num","pb_bank","pb_acc","pb_name","pi_name","pi_iban","pi_swift","pi_wise","pu_name"];
+const cleanPay = (p) => { const o = {}; PAY_KEYS.forEach(k => { if (p && typeof p[k] === "string" && p[k].trim()) o[k] = p[k].trim().slice(0, 120); }); return o; };
+
 window.loadProfile = async () => {
   const u = window.ozean.user; if (!u) return null;
   const s = await getDoc(doc(db, "users", u.uid));
-  return s.exists() ? s.data() : null;
+  const out = s.exists() ? s.data() : null;
+  try {
+    const p = await getDoc(doc(db, "payInfo", u.uid));
+    if (out && p.exists()) { const { updatedAt, ...pay } = p.data(); out.payments = pay; }
+  } catch (e) {}
+  return out;
 };
 window.saveProfile = async (data) => {
   const u = window.ozean.user; if (!u) throw new Error("سجّل الدخول أولاً");
-  await updateDoc(doc(db, "users", u.uid), data);
+  const { payments, ...rest } = data || {};
+  const clean = {};
+  Object.entries(rest).forEach(([k, v]) => { if (v !== undefined) clean[k] = v; });
+  if (Object.keys(clean).length) await updateDoc(doc(db, "users", u.uid), clean);
+  if (payments) await setDoc(doc(db, "payInfo", u.uid), { ...cleanPay(payments), updatedAt: serverTimestamp() });
+};
+// بيانات استلام الفنان: تُعرض للمشتري المسجّل فقط عند الدفع
+window.loadSellerPay = async (uid) => {
+  if (!window.ozean.user || !uid) return null;
+  try { const s = await getDoc(doc(db, "payInfo", uid)); if (!s.exists()) return null; const { updatedAt, ...pay } = s.data(); return pay; }
+  catch (e) { return null; }
 };
 
 window.placeBid = async (docId, amount) => {
@@ -164,18 +193,91 @@ window.closeAuction = async (docId) => {
   await updateDoc(doc(db, "items", docId), { "auction.closed": true });
 };
 
+async function removeItemFully(docId) {
+  const mref = doc(db, "items", docId, "private", "master");
+  try {
+    const m = await getDoc(mref);
+    if (m.exists() && m.data().masterPath) await deleteObject(ref(storage, m.data().masterPath)).catch(() => {});
+    await deleteDoc(mref).catch(() => {});
+  } catch (e) {}
+  await deleteDoc(doc(db, "items", docId));
+}
 window.deleteItem = async (docId) => {
   if (!window.ozean.user) throw new Error("سجّل الدخول أولاً");
-  await deleteDoc(doc(db, "items", docId));
+  await removeItemFully(docId);
 };
 
 window.deleteAccount = async () => {
   const user = auth.currentUser;
   if (!user) throw new Error("سجّل الدخول أولاً");
   const mine = await getDocs(query(collection(db, "items"), where("artistId", "==", user.uid)));
-  for (const d of mine.docs) await deleteDoc(d.ref);
+  for (const d of mine.docs) await removeItemFully(d.id);
+  await deleteDoc(doc(db, "payInfo", user.uid)).catch(() => {});
   await deleteDoc(doc(db, "users", user.uid)).catch(() => {});
   await deleteUser(user);
+};
+
+// ===== الطلبات: شراء بالتحويل (داخل ليبيا وخارجها) =====
+// الخطوات: المشتري ينشئ طلباً "pending" ← يحوّل المبلغ ويرسل الإيصال للفنان ← الفنان يؤكد ← يُفتح تنزيل الملف الأصلي
+const mapOrder = (d) => {
+  const x = d.data();
+  const ms = (t) => (t && t.toMillis ? t.toMillis() : 0);
+  return { id: d.id, ...x, createdAt: ms(x.createdAt), confirmedAt: ms(x.confirmedAt) };
+};
+
+window.createOrder = async (o) => {
+  const u = window.ozean.user; if (!u) throw new Error("سجّل الدخول أولاً");
+  if (!o || !o.docId) throw new Error("هذا العمل غير متاح للشراء المباشر");
+  const is = await getDoc(doc(db, "items", o.docId));
+  if (!is.exists() || !is.data().isPublished) throw new Error("العمل غير متاح");
+  const it = is.data();
+  if (it.artistId === u.uid) throw new Error("لا يمكنك شراء عملك");
+  if (it.pricingMode !== "fixed") throw new Error("هذا العمل غير معروض للشراء المباشر");
+  const oref = doc(db, "orders", o.docId + "_" + u.uid);
+  const ex = await getDoc(oref);
+  if (ex.exists()) {
+    const st = ex.data().status;
+    if (st === "confirmed") throw new Error("اشتريت هذا العمل مسبقاً");
+    if (st === "pending") return { id: oref.id, ref: ex.data().ref, existing: true };
+    await deleteDoc(oref); // طلب مرفوض سابقاً: يُعاد إنشاؤه
+  }
+  const data = {
+    itemId: o.docId, itemNumId: it.numId ?? null, itemTitle: it.title,
+    sellerId: it.artistId, buyerId: u.uid, buyerName: u.displayName || "", buyerEmail: u.email || "",
+    ref: String(o.ref || "").slice(0, 40), method: String(o.method || "").slice(0, 60),
+    region: o.region === "ly" ? "ly" : "int",
+    amount: it.price, currency: it.currency || "LYD",   // السعر يؤخذ من الخادم لا من المتصفح
+    status: "pending", createdAt: serverTimestamp()
+  };
+  await setDoc(oref, data);
+  return { id: oref.id, ref: data.ref };
+};
+
+window.loadOrders = async () => {
+  const u = window.ozean.user; if (!u) return { bought: [], sold: [] };
+  const [b, s] = await Promise.all([
+    getDocs(query(collection(db, "orders"), where("buyerId", "==", u.uid))),
+    getDocs(query(collection(db, "orders"), where("sellerId", "==", u.uid)))
+  ]);
+  const byDate = (a, c) => c.createdAt - a.createdAt;
+  return { bought: b.docs.map(mapOrder).sort(byDate), sold: s.docs.map(mapOrder).sort(byDate) };
+};
+
+async function setOrderStatus(id, status) {
+  if (!window.ozean.user) throw new Error("سجّل الدخول أولاً");
+  await updateDoc(doc(db, "orders", id), { status, confirmedAt: serverTimestamp() });
+}
+window.confirmOrder = (id) => setOrderStatus(id, "confirmed");
+window.rejectOrder = (id) => setOrderStatus(id, "rejected");
+
+// تسليم العمل الأصلي: لصاحب العمل أو لمشترٍ أكّد الفنان طلبه (تتحقق القواعد من ذلك)
+window.getDelivery = async (docId) => {
+  if (!window.ozean.user) throw new Error("سجّل الدخول أولاً");
+  const s = await getDoc(doc(db, "items", docId, "private", "master"));
+  if (!s.exists()) throw new Error("لم يرفع الفنان الملف الأصلي بعد");
+  const d = s.data();
+  const url = d.masterPath ? await getDownloadURL(ref(storage, d.masterPath)) : null;
+  return { url, driveLink: d.driveLink || null };
 };
 
 window.saveAvatar = async (dataUrl) => {
