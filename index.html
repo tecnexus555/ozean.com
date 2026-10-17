@@ -315,6 +315,12 @@ h2 a{font-size:13px;color:var(--cyan);font-weight:600}
   .art-menu{position:fixed;top:60px;inset-inline:12px;width:auto}
 }
 
+/* نوع عمل الفنان */
+.role-badge{display:inline-flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--cyan);color:var(--cyan);border-radius:999px;padding:5px 14px;font-size:13px;font-weight:700;margin:8px 0 0}
+.role-box{display:grid;gap:8px;margin:0 0 14px}
+.role-box select,.role-box input{background:var(--bg2);color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:10px;font-family:inherit;font-size:14px;width:100%}
+.role-box small{color:var(--mute);font-size:12px;line-height:1.7}
+
 /* الدفع */
 .pbox{background:var(--panel);border:1px dashed var(--line);border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.9;margin:4px 0 12px}
 .pbox .ref{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
@@ -340,7 +346,7 @@ h2 a{font-size:13px;color:var(--cyan);font-weight:600}
     <div class="art-wrap" id="artWrap">
       <button class="btn-art" id="abtn" onclick="toggleArtistMenu(event)" aria-label="لوحة الفنان" aria-haspopup="true" aria-expanded="false"><i data-ic="brush"></i><span>لوحة الفنان</span></button>
       <div class="art-menu" id="artMenu" role="menu">
-        <div class="art-head"><div class="art-av" id="artAv"><i data-ic="user" data-s="26"></i></div><div><b id="artName">حسابي</b><small>فنان تشكيلي</small></div></div>
+        <div class="art-head"><div class="art-av" id="artAv"><i data-ic="user" data-s="26"></i></div><div><b id="artName">حسابي</b><small id="artRole">فنان</small></div></div>
         <button role="menuitem" onclick="artGo('artist')"><span>لوحاتي الفنية</span><i data-ic="paint" data-s="20"></i></button>
         <button role="menuitem" onclick="artGo('artist','statW')"><span>إحصائيات المبيعات</span><i data-ic="chart" data-s="20"></i></button>
         <button role="menuitem" onclick="artGo('artist','ordersBox')"><span>طلبات العملاء</span><i data-ic="clip" data-s="20"></i></button>
@@ -442,6 +448,15 @@ h2 a{font-size:13px;color:var(--cyan);font-weight:600}
 <section id="artist">
   <div class="pf">
     <div class="box">
+      <h2 style="margin-top:0">نوع عملي</h2>
+      <div class="role-box">
+        <span class="role-badge" id="aRoleBadge" style="margin:0;justify-self:start">فنان</span>
+        <select id="aRole" onchange="onRoleChange(this.value)"></select>
+        <input id="aRoleOther" maxlength="40" placeholder="حدّد نوع عملك، مثال: شاعر" style="display:none" onchange="saveRole()">
+        <small>يظهر هذا التصنيف في لوحة الفنان وفي بيانات حسابك.</small>
+      </div>
+    </div>
+    <div class="box">
       <h2 style="margin-top:0">صفحتي العامة</h2>
       <p style="color:var(--mute);font-size:14px;line-height:1.7">اعرض أعمالك لجمهور المنصة وشاركها مباشرة على منصات التواصل.</p>
       <div class="link-row">
@@ -521,6 +536,7 @@ h2 a{font-size:13px;color:var(--cyan);font-weight:600}
       <input type="file" id="avatarFile" accept="image/*" style="display:none" onchange="onAvatar(event)">
       <small style="color:var(--mute);font-size:12px">اضغط الصورة لإضافة صورتك</small>
       <b id="pName">حسابي</b>
+      <div><span class="role-badge" id="pRoleBadge" style="display:none"></span></div>
       <div style="color:var(--mute);font-size:13px;margin:4px 0 14px">عضو منذ 2026</div>
       <div class="addr" id="addr">لم يتم ربط محفظة</div>
       <div class="lock">🔒 بياناتك خاصة ولا تظهر لأي مستخدم آخر</div>
@@ -528,6 +544,8 @@ h2 a{font-size:13px;color:var(--cyan);font-weight:600}
     <div class="box">
       <h2 style="margin-top:0">بياناتي</h2>
       <div class="kv"><span>البريد الإلكتروني</span><span id="pEmail">—</span></div>
+      <div class="kv"><span>نوع عملي</span><span><select id="pRole" onchange="onRoleChange()" style="background:var(--bg2);color:var(--txt);border:1px solid var(--border,var(--line));border-radius:8px;padding:4px;max-width:170px"></select></span></div>
+      <div class="kv" id="pRoleOtherRow" style="display:none"><span>حدّد نوع عملك</span><span><input id="pRoleOther" maxlength="40" placeholder="مثال: شاعر" onchange="saveRole()" style="background:transparent;border:0;color:inherit;text-align:left;width:160px"></span></div>
       <div class="kv"><span>الجوال</span><span><input id='pPhone' type='tel' placeholder='+218...' onchange='savePhone(this.value)' style='background:transparent;border:0;color:inherit;text-align:left;width:160px'></span></div>
       <div class="kv"><span>من يرى رقمي</span><span><select id='pPrivacy' onchange='savePhone(document.getElementById("pPhone").value)' style='background:var(--bg2);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:4px'><option value='private'>خاص، لا يظهر لأحد</option><option value='buyers'>للمشترين بعد الشراء فقط</option><option value='public'>للجميع</option></select></span></div>
       <div class="kv"><span>وسيلة الدفع المحفوظة</span><span>لا توجد</span></div>
@@ -1224,6 +1242,53 @@ go('home');
 </script>
 <script type="module" src="firebase-bridge.js"></script>
 <script>
+
+// ===== نوع عمل الفنان =====
+const ROLES={painter:'فنان تشكيلي',designer:'مصمم',instrumentalist:'عازف',singer:'مغني',composer:'مؤلف موسيقي',photographer:'مصوّر',filmmaker:'صانع أفلام / فيديو',craftsman:'حِرَفي',fashion:'مصمم أزياء',calligrapher:'خطّاط',other:'أخرى'};
+const ROLEKEY='ozean_role';
+function roleLabel(r){ if(!r||!r.type) return 'فنان'; return r.type==='other' ? (r.other||ROLES.other) : (ROLES[r.type]||'فنان'); }
+function getRole(){ return lsGet(ROLEKEY,{type:'',other:''}); }
+function fillRoleSelects(){
+  const cur=getRole();
+  ['pRole','aRole'].forEach(id=>{
+    const el=$(id); if(!el) return;
+    el.innerHTML='<option value="">اختر نوع عملك</option>'+Object.entries(ROLES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
+    el.value=cur.type||'';
+  });
+}
+function renderRole(){
+  const r=getRole(), label=roleLabel(r), has=!!r.type;
+  const set=(id,fn)=>{ const el=$(id); if(el) fn(el); };
+  set('artRole',el=>el.textContent=label);
+  set('aRoleBadge',el=>el.textContent=has?label:'لم يُحدَّد بعد');
+  set('pRoleBadge',el=>{ el.textContent=label; el.style.display=has?'inline-flex':'none'; });
+  ['pRole','aRole'].forEach(id=>set(id,el=>{ el.value=r.type||''; }));
+  const showOther=r.type==='other';
+  set('pRoleOtherRow',el=>el.style.display=showOther?'flex':'none');
+  set('aRoleOther',el=>el.style.display=showOther?'block':'none');
+  ['pRoleOther','aRoleOther'].forEach(id=>set(id,el=>{ el.value=r.other||''; }));
+}
+function onRoleChange(v){
+  const type = v!==undefined ? v : $('pRole').value;
+  const cur=getRole();
+  lsSet(ROLEKEY,{type:type,other:type==='other'?(cur.other||''):''});
+  renderRole();
+  if(type!=='other') saveRole(); else { const el=$('aRoleOther'); if(el&&currentSection()==='artist') el.focus(); }
+}
+function saveRole(){
+  const cur=getRole();
+  const other=(($('aRoleOther')&&$('aRoleOther').value)||($('pRoleOther')&&$('pRoleOther').value)||'').trim().slice(0,40);
+  if(cur.type==='other'){ cur.other=other; lsSet(ROLEKEY,cur); }
+  renderRole();
+  if(cur.type==='other' && !other){ return; }
+  if(window.saveProfile && window.ozean && window.ozean.user){
+    window.saveProfile({artistType:cur.type||null, artistTypeOther:cur.type==='other'?other:null})
+      .then(()=>toast('تم حفظ نوع عملك'))
+      .catch(e=>toast('تعذّر الحفظ: '+e.message));
+  } else toast('تم حفظ نوع عملك على هذا الجهاز');
+}
+fillRoleSelects(); renderRole();
+
 // ===== قائمة لوحة الفنان في الشريط العلوي =====
 function toggleArtistMenu(e){
   if(e) e.stopPropagation();
@@ -1378,13 +1443,14 @@ window.addEventListener('ozean-auth', async (e)=>{
   if(!u) window.ozeanSynced=false;
   if(u){
     state.owned=[];
-    if(window.loadProfile) window.loadProfile().then(p=>{ if(p&&p.phone) $('pPhone').value=p.phone; if(p&&p.phonePrivacy) $('pPrivacy').value=p.phonePrivacy; if(p&&p.payments){ lsSet(PAYKEY,p.payments); renderServices(); } }).catch(()=>{});
+    if(window.loadProfile) window.loadProfile().then(p=>{ if(p&&p.phone) $('pPhone').value=p.phone; if(p&&p.phonePrivacy) $('pPrivacy').value=p.phonePrivacy; if(p&&p.artistType!==undefined){ lsSet(ROLEKEY,{type:p.artistType||'',other:p.artistTypeOther||''}); renderRole(); } if(p&&p.payments){ lsSet(PAYKEY,p.payments); renderServices(); } }).catch(()=>{});
     $('pEmail').textContent=u.email||'—';
     $('pName').textContent=u.displayName||'حسابي';
     if(u.photoURL && !state.profile.avatar){
       $('avatarBox').innerHTML=`<img src='${u.photoURL}' alt='' style='width:100%;height:100%;object-fit:cover;border-radius:50%'>`;
     }
   } else {
+    try{ localStorage.removeItem(ROLEKEY); }catch(e){} renderRole();
     $('pEmail').textContent='غير مسجّل';
     $('pName').textContent='حسابي';
   }

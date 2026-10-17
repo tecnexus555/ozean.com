@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>لوحة الإدارة</title>
+<style>
+body{font-family:"Segoe UI",Tahoma,sans-serif;background:#0a0612;color:#e9eef7;margin:0;padding:16px}
+h1{font-size:20px;margin:6px 0 14px}
+.card{background:#140b22;border:1px solid #2a1f3a;border-radius:14px;padding:14px;margin:10px 0}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.kpi b{display:block;font-size:20px;margin-top:4px}
+.kpi small{color:#8a94a8}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{border-bottom:1px solid #2a1f3a;padding:6px;text-align:right}
+button{background:linear-gradient(135deg,#f97316,#ec4899);border:0;color:#06121a;font-weight:700;border-radius:10px;padding:10px 16px;cursor:pointer}
+.note{color:#8a94a8;font-size:12px;line-height:1.7}
+</style>
+</head>
+<body>
+<h1>لوحة الإدارة</h1>
+<div id="auth" class="card">
+  <button id="login">تسجيل الدخول بحساب Google</button>
+  <p id="msg" class="note"></p>
+</div>
+<div id="app" style="display:none">
+  <div class="kpis">
+    <div class="card kpi"><small>رصيد العمولات (USD)</small><b id="bal">—</b></div>
+    <div class="card kpi"><small>إجمالي العمولات (USD)</small><b id="fees">—</b></div>
+    <div class="card kpi"><small>عدد المبيعات</small><b id="cnt">—</b></div>
+    <div class="card kpi"><small>إجمالي المبيعات (USD)</small><b id="gross">—</b></div>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">آخر العمليات</h3>
+    <table>
+      <thead><tr><th>التاريخ</th><th>السعر</th><th>العمولة USD</th><th>صافي الفنان USD</th><th>الحالة</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+  <p class="note">السحب من الرصيد غير مفعّل بعد، ويتطلب ربط بوابة دفع مرخصة. الأرقام تُكتب من الخادم فقط.</p>
+</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc, collection, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+// ⚠️ ضع معرّف حسابك من Authentication ← Users (نفس القيمة في firestore.rules)
+const ADMIN_UID = "ADMIN_UID";
+
+const app = initializeApp({
+  apiKey: "AIzaSyCSSLsWAOoyG_6CyiQysDK2IoFYjf-nMbE",
+  authDomain: "ozean-47b09.firebaseapp.com",
+  projectId: "ozean-47b09",
+  storageBucket: "ozean-47b09.firebasestorage.app",
+  messagingSenderId: "207064916319",
+  appId: "1:207064916319:web:8d299bce003418d5a116ea"
+});
+const auth = getAuth(app);
+const db = getFirestore(app);
+const $ = id => document.getElementById(id);
+const fmt = n => Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+$('login').onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(e => $('msg').textContent = e.message);
+
+onAuthStateChanged(auth, async (u) => {
+  if (!u) { $('auth').style.display = 'block'; $('app').style.display = 'none'; return; }
+  if (u.uid !== ADMIN_UID) { $('msg').textContent = 'هذا الحساب غير مصرّح له بالدخول.'; $('login').style.display = 'none'; return; }
+  $('auth').style.display = 'none';
+  $('app').style.display = 'block';
+  try {
+    const l = await getDoc(doc(db, 'platform', 'ledger'));
+    const d = l.exists() ? l.data() : {};
+    $('bal').textContent = fmt(d.balanceUsd);
+    $('fees').textContent = fmt(d.totalFeesUsd);
+    $('cnt').textContent = d.salesCount || 0;
+    $('gross').textContent = fmt(d.totalGrossUsd);
+    const snap = await getDocs(query(collection(db, 'purchases'), orderBy('createdAt', 'desc'), limit(50)));
+    $('rows').innerHTML = snap.docs.map(x => {
+      const p = x.data();
+      const t = p.createdAt && p.createdAt.toDate ? p.createdAt.toDate().toLocaleString('ar-LY') : '—';
+      return `<tr><td>${t}</td><td>${p.amount} ${p.currency}</td><td>${fmt(p.platformFeeUsd)}</td><td>${fmt(p.artistNetUsd)}</td><td>${p.status}</td></tr>`;
+    }).join('') || '<tr><td colspan="5">لا توجد عمليات بعد</td></tr>';
+  } catch (e) {
+    $('msg').textContent = 'تعذّر تحميل البيانات: ' + e.message;
+  }
+});
+</script>
+</body>
+</html>
