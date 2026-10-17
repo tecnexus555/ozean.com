@@ -418,6 +418,7 @@ h2 a{font-size:13px;color:var(--cyan);font-weight:600}
 
 <section id="store">
   <div class="chips" id="chips"></div>
+  <div class="role-box" style="margin:0 0 12px"><select id="roleFilter" onchange="roleF=this.value;renderStore()" aria-label="تصفية حسب نوع الفنان"></select></div>
   <div class="grid" id="store-grid"></div>
 <div id="sentinel" style="height:1px"></div>
   <p id="empty" style="display:none;color:var(--mute);padding:30px 0;text-align:center">لا توجد نتائج مطابقة.</p>
@@ -673,6 +674,19 @@ let items=[
 ];
 const state={owned:[3,9],shares:0,links:{},svc:{mypay:false,visa:false,paypal:false,crypto:false},profile:{avatar:''},pub:true,share:true};
 let cat='all', q='', curId=null, wallet=false;
+const ROLES={painter:'فنان تشكيلي',designer:'مصمم',instrumentalist:'عازف',singer:'مغني',composer:'مؤلف موسيقي',photographer:'مصوّر',filmmaker:'صانع أفلام / فيديو',craftsman:'حِرَفي',fashion:'مصمم أزياء',calligrapher:'خطّاط',other:'أخرى'};
+const ROLEKEY='ozean_role';
+function roleLabel(r){ if(!r||!r.type) return 'فنان'; return r.type==='other' ? (r.other||ROLES.other) : (ROLES[r.type]||'فنان'); }
+function getRole(){ return lsGet(ROLEKEY,{type:'',other:''}); }
+// نوع فنان العمل: لأعمالي من حسابي الحالي، ولغيري من الحقل المحفوظ في العمل نفسه
+function roleOf(it){ return it.mine ? (getRole().type||'') : (it.artistRole||''); }
+function roleTxt(it){
+  const t=roleOf(it); if(!t) return '';
+  if(t==='other') return (it.mine?getRole().other:it.artistRoleOther)||ROLES.other;
+  return ROLES[t]||'';
+}
+let roleF='';
+
 let up={img:'',vid:'',aud:'',file:null};
 let gallery=[];
 let stageFiles=[];
@@ -702,7 +716,7 @@ const tagOf=(it,isNew)=>it.auction?['مزاد','t-or']:it.price===0?['مجاني
 function card(it,_i,isNew){
   const [tg,tc]=tagOf(it,isNew);
   return `<div class="card" onclick="openItem(${it.id})"><div class="art">${thumb(it)}<span class="wm">OZEAN</span><span class="badge ${tc}">${tg}</span></div>
-  <div class="meta"><b>${esc(it.title)}</b><small>${esc(it.artist)} <span class="verified">✔</span></small>
+  <div class="meta"><b>${esc(it.title)}</b><small>${esc(it.artist)} <span class="verified">✔</span>${roleTxt(it)?` · ${esc(roleTxt(it))}`:''}</small>
   <div class="row2"><span class="price">${priceTxt(it)}</span>${it.auction?`<span class="timer">${timeLeft(it.auction)}</span>`:(it.dur?`<span class="timer">${it.dur}</span>`:'')}</div></div></div>`;
 }
 
@@ -722,9 +736,15 @@ function renderHome(){
   $('latest').innerHTML=items.filter(x=>!x.draft).slice(-5).reverse().map((it,i)=>card(it,i,true)).join('');
 }
 function setCat(c,goTo){ cat=c; if(goTo) go('store'); else { renderStore(); markNav('store'); } }
+function fillRoleFilter(){
+  const el=$('roleFilter'); if(!el) return;
+  el.innerHTML='<option value="">كل أنواع الفنانين</option>'+Object.entries(ROLES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
+  el.value=roleF;
+}
 function renderStore(){
+  fillRoleFilter();
   $('chips').innerHTML=[['all','الكل'],['auction','مزادات'],...Object.entries(CAT)].map(([k,v])=>`<button class="chip ${cat===k?'on':''}" onclick="setCat('${k}')">${v}</button>`).join('');
-  const list=items.filter(x=>!x.draft && (!x.mine||state.pub) && (cat==='all'||(cat==='auction'?!!x.auction:x.cat===cat)) && (!q||(x.title+' '+x.artist+' '+(x.desc||'')+' '+(CAT[x.cat]||'')).toLowerCase().includes(q.toLowerCase())));
+  const list=items.filter(x=>!x.draft && (!x.mine||state.pub) && (cat==='all'||(cat==='auction'?!!x.auction:x.cat===cat)) && (!roleF||roleOf(x)===roleF) && (!q||(x.title+' '+x.artist+' '+roleTxt(x)+' '+(x.desc||'')+' '+(CAT[x.cat]||'')).toLowerCase().includes(q.toLowerCase())));
   renderGrid(list);
   $('empty').style.display=list.length?'none':'block';
 }
@@ -742,6 +762,7 @@ function openItem(id){
       <span class="verified-tag">${CAT[it.cat]}</span>
       <h1>${esc(it.title)}</h1>
       <div style="color:var(--mute);font-size:14px">${esc(it.artist)} <span class="verified">✔</span></div>
+      ${roleTxt(it)?`<span class="role-badge" style="margin:8px 0 4px">${esc(roleTxt(it))}</span>`:''}
       <p class="desc">${esc(it.desc||'')}</p>
       <div class="notice">${media?`معاينة مجانية ${it.cat==='video'?'10 ثوانٍ':'15 ثانية'} قبل الشراء، والملف الكامل يُسلَّم بعد الدفع.`:'العمل يُعرض بعلامة مائية، والنسخة الأصلية تُسلَّم بعد الشراء.'}</div>
       <div class="row2" style="border:0;margin:6px 0 16px"><span class="price" style="font-size:22px">${priceTxt(it)}</span>${it.dur?`<span class="timer">${it.dur}</span>`:''}</div>
@@ -911,7 +932,7 @@ async function submitWork(){
   if(window.publishItem){
     const it=items[items.length-1];
     items=items.filter(x=>x!==it);
-    window.publishItem({...it, masterFile: up.file, commissionPercent: Number($('f_pct').value)||10, minFeeUsd: Number($('f_minfee').value)||0.5, driveLink: $('f_drive').value.trim()||null, auction: aucObj, gallery: (gallery.length?gallery:(it.img?[it.img]:[]))})
+    window.publishItem({...it, masterFile: up.file, artistRole: getRole().type||null, artistRoleOther: getRole().type==='other'?(getRole().other||null):null, commissionPercent: Number($('f_pct').value)||10, minFeeUsd: Number($('f_minfee').value)||0.5, driveLink: $('f_drive').value.trim()||null, auction: aucObj, gallery: (gallery.length?gallery:(it.img?[it.img]:[]))})
       .then(res=>{ if(res&&res.warnings&&res.warnings.length) toast(res.warnings.join(' · ')); return window.loadItems ? window.loadItems() : []; })
       .then(r=>{ items=items.filter(x=>!x._remote).concat(r.map(x=>({...x,_remote:true}))); window.ozeanSynced=true; updateNet(); go('store'); })
       .catch(err=>{ items.push(it); toast('تعذّر الحفظ: '+err.message); });
@@ -1244,10 +1265,6 @@ go('home');
 <script>
 
 // ===== نوع عمل الفنان =====
-const ROLES={painter:'فنان تشكيلي',designer:'مصمم',instrumentalist:'عازف',singer:'مغني',composer:'مؤلف موسيقي',photographer:'مصوّر',filmmaker:'صانع أفلام / فيديو',craftsman:'حِرَفي',fashion:'مصمم أزياء',calligrapher:'خطّاط',other:'أخرى'};
-const ROLEKEY='ozean_role';
-function roleLabel(r){ if(!r||!r.type) return 'فنان'; return r.type==='other' ? (r.other||ROLES.other) : (ROLES[r.type]||'فنان'); }
-function getRole(){ return lsGet(ROLEKEY,{type:'',other:''}); }
 function fillRoleSelects(){
   const cur=getRole();
   ['pRole','aRole'].forEach(id=>{
@@ -1283,7 +1300,7 @@ function saveRole(){
   if(cur.type==='other' && !other){ return; }
   if(window.saveProfile && window.ozean && window.ozean.user){
     window.saveProfile({artistType:cur.type||null, artistTypeOther:cur.type==='other'?other:null})
-      .then(()=>toast('تم حفظ نوع عملك'))
+      .then(()=>{ toast('تم حفظ نوع عملك'); if(window.syncItemsRole) window.syncItemsRole(cur.type||null, cur.type==='other'?other:null).catch(()=>{}); })
       .catch(e=>toast('تعذّر الحفظ: '+e.message));
   } else toast('تم حفظ نوع عملك على هذا الجهاز');
 }
